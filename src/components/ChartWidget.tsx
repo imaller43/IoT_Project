@@ -1,0 +1,85 @@
+import React from 'react';
+import { 
+  AreaChart, 
+  Area, 
+  XAxis, 
+  YAxis, 
+  CartesianGrid, 
+  Tooltip, 
+  Legend, 
+  ResponsiveContainer 
+} from 'recharts';
+
+export interface ChartSeries {
+  dataKey: string;
+  name: string;
+  color: string;
+}
+
+interface ChartWidgetProps {
+  title: string;
+  data: any[];
+  series: ChartSeries[];
+  xAxisKey: string;
+}
+
+const ChartWidget: React.FC<ChartWidgetProps> = ({ title, data, series, xAxisKey }) => {
+  const safeData = Array.isArray(data) ? data : [];
+
+  return (
+    <div className="panel" style={{ height: '350px' }}>
+      <div className="panel-header">
+        {title}
+      </div>
+      <div style={{ flex: 1, width: '100%', minHeight: 0 }}>
+        <ResponsiveContainer width="100%" height="100%">
+          <AreaChart data={safeData} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}>
+            <defs>
+              {series.map((s) => (
+                <linearGradient key={`color-${s.dataKey}`} id={`color-${s.dataKey}`} x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor={s.color} stopOpacity={0.3}/>
+                  <stop offset="95%" stopColor={s.color} stopOpacity={0}/>
+                </linearGradient>
+              ))}
+            </defs>
+            <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.2)" vertical={false} />
+            <XAxis 
+              dataKey={xAxisKey} 
+              stroke="#adb5bd" 
+              fontSize={11} 
+              tickMargin={10}
+              tickFormatter={(val) => {
+                // Shorten time string for display if needed
+                if (!val) return '';
+                const parts = val.split(' ');
+                return parts.length > 1 ? parts[1] : val;
+              }}
+            />
+            <YAxis stroke="#adb5bd" fontSize={11} tickMargin={10} />
+            <Tooltip 
+              contentStyle={{ backgroundColor: 'rgba(15, 17, 26, 0.9)', borderColor: 'rgba(255,255,255,0.1)', borderRadius: '8px' }}
+              itemStyle={{ fontSize: '0.875rem' }}
+              labelStyle={{ color: '#adb5bd', marginBottom: '0.5rem', fontSize: '0.75rem' }}
+            />
+            <Legend wrapperStyle={{ fontSize: '12px' }} />
+            {series.map((s) => (
+              <Area 
+                key={s.dataKey}
+                type="monotone" 
+                dataKey={s.dataKey} 
+                name={s.name} 
+                stroke={s.color} 
+                fill={`url(#color-${s.dataKey})`}
+                strokeWidth={2}
+                dot={false}
+                activeDot={{ r: 6 }}
+              />
+            ))}
+          </AreaChart>
+        </ResponsiveContainer>
+      </div>
+    </div>
+  );
+};
+
+export default ChartWidget;
