@@ -27,3 +27,6 @@ dist-ssr
 .env
 .env.*
 !.env.example
+
+# Python Scripts (Raspberry Pi)
+rpi_mqtt_publisher.py
