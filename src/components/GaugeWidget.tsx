@@ -62,7 +62,10 @@ const GaugeWidget: React.FC<GaugeWidgetProps> = ({
           <div style={{width: 8, height: 8, borderRadius: '50%', background: `linear-gradient(135deg, ${colors[0]}, ${colors[1]})`}}></div>
           {title}
         </div>
-        <div className="live-indicator" title="Real-time updates active"></div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+          <span style={{ color: '#ef4444', fontSize: '0.75rem', fontWeight: 700, letterSpacing: '0.05em', animation: 'blink-slow 2s infinite ease-in-out' }}>LIVE</span>
+          <div className="live-indicator" title="Real-time updates active"></div>
+        </div>
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', flex: 1, padding: '1rem 0' }}>
         <GaugeComponent
