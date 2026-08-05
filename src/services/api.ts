@@ -2,7 +2,7 @@ import axios from 'axios';
 import { SensorData, MeanData } from '../types';
 
 const API_BASE_URL = '/api'; // using Vite proxy to bypass CORS
-const TOKEN = 'HZP7Kfy0XwQ1P_I0KLycGb_JVSE4YdsbyfzFwghjoRKUGMkFxVJfcRQ7l-_C49ZHXbDRA7fl9PargmGV_8zy4Q==';
+const TOKEN = 'kZjxek1d8WPwdKVVTuRRjl3Lc8Rw6Nyi3oBad6BM_u8LmF105CedfDQD55KkwCO8oqdfzlXWyIJk3kvFc-JYrw==';
 const ORG = 'Project IoT Sapura';
 const BUCKET = 'Collection_Data_Sensor_2';
 
