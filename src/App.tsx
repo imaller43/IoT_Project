@@ -31,6 +31,10 @@ function App() {
     return () => clearInterval(clockInterval);
   }, []);
 
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [activeTab]);
+
   return (
     <>
       <SignedOut>
@@ -162,42 +166,44 @@ function App() {
             </div>
           </div>
 
-          {activeTab === 'room1' && (
-            <RoomDashboard 
-              roomId="room1" 
-              measurement="Bilik_1" 
-              temperature={roomsData['Bilik_1']?.temperature || 0}
-              humidity={roomsData['Bilik_1']?.humidity || 0}
-              lightDensity={roomsData['Bilik_1']?.lightDensity || 0}
-              timeRange={timeRange}
-              hasSwitches={true}
-              onDbStatusChange={setIsDbConnected}
-            />
-          )}
-          {activeTab === 'room2' && (
-            <RoomDashboard 
-              roomId="room2" 
-              measurement="Bilik_2" 
-              temperature={roomsData['Bilik_2']?.temperature || 0}
-              humidity={roomsData['Bilik_2']?.humidity || 0}
-              lightDensity={roomsData['Bilik_2']?.lightDensity || 0}
-              timeRange={timeRange}
-              hasSwitches={false}
-              onDbStatusChange={setIsDbConnected}
-            />
-          )}
-          {activeTab === 'room3' && (
-            <RoomDashboard 
-              roomId="room3" 
-              measurement="Bilik_3" 
-              temperature={roomsData['Bilik_3']?.temperature || 0}
-              humidity={roomsData['Bilik_3']?.humidity || 0}
-              lightDensity={roomsData['Bilik_3']?.lightDensity || 0}
-              timeRange={timeRange}
-              hasSwitches={false}
-              onDbStatusChange={setIsDbConnected}
-            />
-          )}
+          <div key={activeTab} className="tab-transition">
+            {activeTab === 'room1' && (
+              <RoomDashboard 
+                roomId="room1" 
+                measurement="Bilik_1" 
+                temperature={roomsData['Bilik_1']?.temperature || 0}
+                humidity={roomsData['Bilik_1']?.humidity || 0}
+                lightDensity={roomsData['Bilik_1']?.lightDensity || 0}
+                timeRange={timeRange}
+                hasSwitches={true}
+                onDbStatusChange={setIsDbConnected}
+              />
+            )}
+            {activeTab === 'room2' && (
+              <RoomDashboard 
+                roomId="room2" 
+                measurement="Bilik_2" 
+                temperature={roomsData['Bilik_2']?.temperature || 0}
+                humidity={roomsData['Bilik_2']?.humidity || 0}
+                lightDensity={roomsData['Bilik_2']?.lightDensity || 0}
+                timeRange={timeRange}
+                hasSwitches={false}
+                onDbStatusChange={setIsDbConnected}
+              />
+            )}
+            {activeTab === 'room3' && (
+              <RoomDashboard 
+                roomId="room3" 
+                measurement="Bilik_3" 
+                temperature={roomsData['Bilik_3']?.temperature || 0}
+                humidity={roomsData['Bilik_3']?.humidity || 0}
+                lightDensity={roomsData['Bilik_3']?.lightDensity || 0}
+                timeRange={timeRange}
+                hasSwitches={false}
+                onDbStatusChange={setIsDbConnected}
+              />
+            )}
+          </div>
         </div>
       </SignedIn>
     </>
