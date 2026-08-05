@@ -34,6 +34,14 @@ function App() {
   const [lightDensityHistory, setLightDensityHistory] = useState<SensorData[]>([]);
   const [meanData, setMeanData] = useState<MeanData[]>([]);
   const [isDbConnected, setIsDbConnected] = useState<boolean | null>(null);
+  
+  // Real-time Clock State
+  const [currentTime, setCurrentTime] = useState(new Date());
+
+  useEffect(() => {
+    const clockInterval = setInterval(() => setCurrentTime(new Date()), 1000);
+    return () => clearInterval(clockInterval);
+  }, []);
 
   useEffect(() => {
     let rawInterval: NodeJS.Timeout;
@@ -120,33 +128,40 @@ function App() {
       <SignedIn>
         <div className="dashboard-container">
           <div className="dashboard-header" style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-              <Activity size={28} color="#a5b4fc" />
-              <h1 className="dashboard-title">Sensor Value</h1>
-          <span style={{
-            marginLeft: '1rem',
-            padding: '4px 10px',
-            borderRadius: '20px',
-            fontSize: '0.75rem',
-            fontWeight: 600,
-            backgroundColor: isConnected ? 'rgba(16, 185, 129, 0.1)' : 'rgba(239, 68, 68, 0.1)',
-            color: isConnected ? '#10b981' : '#ef4444',
-            border: `1px solid ${isConnected ? 'rgba(16, 185, 129, 0.3)' : 'rgba(239, 68, 68, 0.3)'}`
-          }}>
-            {isConnected ? 'MQTT Connected' : 'MQTT Disconnected'}
-          </span>
-          <span style={{
-            padding: '4px 10px',
-            borderRadius: '20px',
-            fontSize: '0.75rem',
-            fontWeight: 600,
-            backgroundColor: isDbConnected === true ? 'rgba(16, 185, 129, 0.1)' : isDbConnected === false ? 'rgba(239, 68, 68, 0.1)' : 'rgba(156, 163, 175, 0.1)',
-            color: isDbConnected === true ? '#10b981' : isDbConnected === false ? '#ef4444' : '#9ca3af',
-            border: `1px solid ${isDbConnected === true ? 'rgba(16, 185, 129, 0.3)' : isDbConnected === false ? 'rgba(239, 68, 68, 0.3)' : 'rgba(156, 163, 175, 0.3)'}`
-          }}>
-            {isDbConnected === true ? 'DB Connected' : isDbConnected === false ? 'DB Error' : 'Connecting DB...'}
-          </span>
-        </div>
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                <Activity size={28} color="#a5b4fc" />
+                <h1 className="dashboard-title">Sensor Value</h1>
+                <span style={{
+                  marginLeft: '1rem',
+                  padding: '4px 10px',
+                  borderRadius: '20px',
+                  fontSize: '0.75rem',
+                  fontWeight: 600,
+                  backgroundColor: isConnected ? 'rgba(16, 185, 129, 0.1)' : 'rgba(239, 68, 68, 0.1)',
+                  color: isConnected ? '#10b981' : '#ef4444',
+                  border: `1px solid ${isConnected ? 'rgba(16, 185, 129, 0.3)' : 'rgba(239, 68, 68, 0.3)'}`
+                }}>
+                  {isConnected ? 'MQTT Connected' : 'MQTT Disconnected'}
+                </span>
+                <span style={{
+                  padding: '4px 10px',
+                  borderRadius: '20px',
+                  fontSize: '0.75rem',
+                  fontWeight: 600,
+                  backgroundColor: isDbConnected === true ? 'rgba(16, 185, 129, 0.1)' : isDbConnected === false ? 'rgba(239, 68, 68, 0.1)' : 'rgba(156, 163, 175, 0.1)',
+                  color: isDbConnected === true ? '#10b981' : isDbConnected === false ? '#ef4444' : '#9ca3af',
+                  border: `1px solid ${isDbConnected === true ? 'rgba(16, 185, 129, 0.3)' : isDbConnected === false ? 'rgba(239, 68, 68, 0.3)' : 'rgba(156, 163, 175, 0.3)'}`
+                }}>
+                  {isDbConnected === true ? 'DB Connected' : isDbConnected === false ? 'DB Error' : 'Connecting DB...'}
+                </span>
+              </div>
+              <div style={{ fontSize: '0.9rem', color: '#94a3b8', marginTop: '0.5rem', display: 'flex', gap: '0.5rem', fontWeight: 500 }}>
+                <span>{currentTime.toLocaleDateString('ms-MY', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</span>
+                <span>|</span>
+                <span>{currentTime.toLocaleTimeString('ms-MY')}</span>
+              </div>
+            </div>
 
         <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
           <div className="custom-dropdown-container">
