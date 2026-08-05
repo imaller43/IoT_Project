@@ -40,6 +40,11 @@ body {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 1rem;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background-color: var(--bg-color);
+  padding: 1rem 0;
 }
 
 .dashboard-title {

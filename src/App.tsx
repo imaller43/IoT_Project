@@ -157,9 +157,9 @@ function App() {
                 </span>
               </div>
               <div style={{ fontSize: '0.9rem', color: '#94a3b8', marginTop: '0.5rem', display: 'flex', gap: '0.5rem', fontWeight: 500 }}>
-                <span>{currentTime.toLocaleDateString('ms-MY', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</span>
+                <span>{currentTime.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</span>
                 <span>|</span>
-                <span>{currentTime.toLocaleTimeString('ms-MY')}</span>
+                <span>{currentTime.toLocaleTimeString('en-US')}</span>
               </div>
             </div>
 
