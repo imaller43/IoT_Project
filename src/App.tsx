@@ -89,7 +89,17 @@ function App() {
   return (
     <>
       <SignedOut>
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', width: '100vw' }}>
+        <div style={{ 
+          display: 'flex', 
+          flexDirection: 'column', 
+          justifyContent: 'center', 
+          alignItems: 'center', 
+          height: '100vh', 
+          width: '100vw',
+          backgroundColor: '#0f172a',
+          backgroundImage: 'radial-gradient(circle at 50% 0%, #1e293b 0%, #0f172a 100%)'
+        }}>
+          <img src="/logo.png" alt="Sensor Value Logo" style={{ marginBottom: '2rem', height: '50px' }} />
           <SignIn />
         </div>
       </SignedOut>
