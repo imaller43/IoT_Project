@@ -106,9 +106,9 @@ function App() {
           <div style={{ position: 'relative' }}>
             <div style={{ 
               position: 'absolute', 
-              inset: '-40px', 
-              background: 'radial-gradient(circle, rgba(168, 85, 247, 0.5) 0%, transparent 70%)',
-              filter: 'blur(25px)',
+              inset: '-60px', 
+              background: 'radial-gradient(circle, rgba(168, 85, 247, 0.85) 0%, rgba(168, 85, 247, 0.2) 50%, transparent 80%)',
+              filter: 'blur(30px)',
               zIndex: 0 
             }} />
             <div style={{ position: 'relative', zIndex: 1 }}>
