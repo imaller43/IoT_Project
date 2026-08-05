@@ -99,8 +99,22 @@ function App() {
           backgroundColor: '#0f172a',
           backgroundImage: 'radial-gradient(circle at 50% 0%, #1e293b 0%, #0f172a 100%)'
         }}>
-          <img src="/logo.png" alt="Sensor Value Logo" style={{ marginBottom: '2rem', height: '50px' }} />
-          <SignIn />
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '2rem' }}>
+            <Activity size={40} color="#a5b4fc" />
+            <h1 style={{ color: '#a5b4fc', fontSize: '2.5rem', fontWeight: 'bold', margin: 0, fontFamily: 'system-ui, -apple-system, sans-serif' }}>Sensor Value</h1>
+          </div>
+          <div style={{ position: 'relative' }}>
+            <div style={{ 
+              position: 'absolute', 
+              inset: '-40px', 
+              background: 'radial-gradient(circle, rgba(168, 85, 247, 0.5) 0%, transparent 70%)',
+              filter: 'blur(25px)',
+              zIndex: 0 
+            }} />
+            <div style={{ position: 'relative', zIndex: 1 }}>
+              <SignIn />
+            </div>
+          </div>
         </div>
       </SignedOut>
       <SignedIn>
