@@ -1,13 +1,16 @@
 import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import mqtt, { MqttClient } from 'mqtt';
 
+export interface RoomData {
+  temperature: number;
+  humidity: number;
+  lightDensity: number;
+}
 
 interface MqttContextType {
   client: MqttClient | null;
   isConnected: boolean;
-  temperature: number;
-  humidity: number;
-  lightDensity: number;
+  roomsData: Record<string, RoomData>;
   publishSwitch: (topic: string, state: boolean) => void;
 }
 
@@ -29,10 +32,12 @@ export const MqttProvider: React.FC<MqttProviderProps> = ({ children }) => {
   const [client, setClient] = useState<MqttClient | null>(null);
   const [isConnected, setIsConnected] = useState<boolean>(false);
 
-  // Real-time values
-  const [temperature, setTemperature] = useState<number>(0);
-  const [humidity, setHumidity] = useState<number>(0);
-  const [lightDensity, setLightDensity] = useState<number>(0);
+  // Store data for all rooms
+  const [roomsData, setRoomsData] = useState<Record<string, RoomData>>({
+    'Bilik_1': { temperature: 0, humidity: 0, lightDensity: 0 },
+    'Bilik_2': { temperature: 0, humidity: 0, lightDensity: 0 },
+    'Bilik_3': { temperature: 0, humidity: 0, lightDensity: 0 },
+  });
 
   useEffect(() => {
     const mqttUrl = `ws://${window.location.host}/mqtt`;
@@ -48,6 +53,8 @@ export const MqttProvider: React.FC<MqttProviderProps> = ({ children }) => {
       console.log('Connected to MQTT Broker successfully!');
       setIsConnected(true);
       mqttClient.subscribe('sapura/bilik1/data');
+      mqttClient.subscribe('sapura/bilik2/data');
+      mqttClient.subscribe('sapura/bilik3/data');
     });
 
     mqttClient.on('error', (err) => {
@@ -59,13 +66,25 @@ export const MqttProvider: React.FC<MqttProviderProps> = ({ children }) => {
     mqttClient.on('offline', () => setIsConnected(false));
 
     mqttClient.on('message', (topic, message) => {
-      if (topic === 'sapura/bilik1/data') {
+      let roomId = '';
+      if (topic === 'sapura/bilik1/data') roomId = 'Bilik_1';
+      else if (topic === 'sapura/bilik2/data') roomId = 'Bilik_2';
+      else if (topic === 'sapura/bilik3/data') roomId = 'Bilik_3';
+
+      if (roomId) {
         try {
           const jsonObj = JSON.parse(message.toString());
-          if (jsonObj.temperature !== undefined) setTemperature(parseFloat(jsonObj.temperature));
-          if (jsonObj.humidity !== undefined) setHumidity(parseFloat(jsonObj.humidity));
-          if (jsonObj.light_density !== undefined) setLightDensity(parseFloat(jsonObj.light_density));
-          else if (jsonObj.ldr !== undefined) setLightDensity(parseFloat(jsonObj.ldr));
+          setRoomsData(prev => {
+            const currentRoom = prev[roomId];
+            return {
+              ...prev,
+              [roomId]: {
+                temperature: jsonObj.temperature !== undefined ? parseFloat(jsonObj.temperature) : currentRoom.temperature,
+                humidity: jsonObj.humidity !== undefined ? parseFloat(jsonObj.humidity) : currentRoom.humidity,
+                lightDensity: jsonObj.light_density !== undefined ? parseFloat(jsonObj.light_density) : (jsonObj.ldr !== undefined ? parseFloat(jsonObj.ldr) : currentRoom.lightDensity)
+              }
+            };
+          });
         } catch (e) {
           console.error("Failed to parse MQTT JSON payload", e);
         }
@@ -79,7 +98,6 @@ export const MqttProvider: React.FC<MqttProviderProps> = ({ children }) => {
 
   const publishSwitch = (topic: string, state: boolean) => {
     if (client && client.connected) {
-      // Assuming interrupt is active low (0 for on, 1 for off) and others are active high.
       const payload = topic.includes('interrupt') ? (state ? '0' : '1') : (state ? '1' : '0');
       client.publish(topic, payload);
     }
@@ -89,9 +107,7 @@ export const MqttProvider: React.FC<MqttProviderProps> = ({ children }) => {
     <MqttContext.Provider value={{
       client,
       isConnected,
-      temperature,
-      humidity,
-      lightDensity,
+      roomsData,
       publishSwitch
     }}>
       {children}

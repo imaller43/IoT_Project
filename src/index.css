@@ -330,3 +330,41 @@ input:checked + .slider:before {
   animation: blink-slow 2s infinite ease-in-out;
   box-shadow: 0 0 5px rgba(239, 68, 68, 0.8);
 }
+
+.browser-tabs {
+  display: flex;
+  gap: 8px;
+  margin-top: 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  width: 100%;
+}
+.browser-tab {
+  padding: 8px 24px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: none;
+  border-radius: 8px 8px 0 0;
+  color: #94a3b8;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+.browser-tab:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #f1f5f9;
+}
+.browser-tab.active {
+  background: rgba(165, 180, 252, 0.1);
+  color: #a5b4fc;
+  border-color: rgba(165, 180, 252, 0.3);
+  position: relative;
+}
+.browser-tab.active::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: #a5b4fc;
+}
