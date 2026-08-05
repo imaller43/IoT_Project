@@ -7,7 +7,9 @@ import { useMqtt } from './context/MqttContext';
 import RoomDashboard from './components/RoomDashboard';
 
 const TIME_RANGES = [
+  { label: 'Past 30m', value: '-30m' },
   { label: 'Past 1h', value: '-1h' },
+  { label: 'Past 3h', value: '-3h' },
   { label: 'Past 6h', value: '-6h' },
   { label: 'Past 12h', value: '-12h' },
   { label: 'Past 24h', value: '-24h' },
