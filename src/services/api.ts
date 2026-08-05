@@ -4,7 +4,7 @@ import { SensorData, MeanData } from '../types';
 const API_BASE_URL = '/api'; // using Vite proxy to bypass CORS
 const TOKEN = 'HZP7Kfy0XwQ1P_I0KLycGb_JVSE4YdsbyfzFwghjoRKUGMkFxVJfcRQ7l-_C49ZHXbDRA7fl9PargmGV_8zy4Q==';
 const ORG = 'Project IoT Sapura';
-const BUCKET = 'Collection_Data_Sensor';
+const BUCKET = 'Collection_Data_Sensor_2';
 
 // Helper to execute Flux query and parse InfluxDB annotated CSV
 const executeFluxQuery = async (fluxQuery: string): Promise<any[]> => {
@@ -60,9 +60,9 @@ export const fetchHistoricalData = async (timeRange: string = '-1h'): Promise<{t
   const query = `
     from(bucket: "${BUCKET}")
       |> range(start: ${timeRange})
-      |> filter(fn: (r) => r._measurement == "Temperature_Data" or r._measurement == "Humidity_Data" or r._measurement == "LDR_Data")
-      |> filter(fn: (r) => r._field == "value")
-      |> keep(columns: ["_time", "_value", "_measurement"])
+      |> filter(fn: (r) => r._measurement == "Bilik_1")
+      |> filter(fn: (r) => r._field == "temperature" or r._field == "humidity" or r._field == "light_density")
+      |> keep(columns: ["_time", "_value", "_field"])
   `;
 
   const rows = await executeFluxQuery(query);
@@ -77,9 +77,9 @@ export const fetchHistoricalData = async (timeRange: string = '-1h'): Promise<{t
       value: parseFloat(row._value)
     };
     
-    if (row._measurement === 'Temperature_Data') temperature.push(dataObj);
-    else if (row._measurement === 'Humidity_Data') humidity.push(dataObj);
-    else if (row._measurement === 'LDR_Data') lightDensity.push(dataObj);
+    if (row._field === 'temperature') temperature.push(dataObj);
+    else if (row._field === 'humidity') humidity.push(dataObj);
+    else if (row._field === 'light_density') lightDensity.push(dataObj);
   });
 
   return { temperature, humidity, lightDensity };
@@ -89,10 +89,10 @@ export const fetchMeanHourlyData = async (timeRange: string = '-24h'): Promise<M
   const query = `
     from(bucket: "${BUCKET}")
       |> range(start: ${timeRange})
-      |> filter(fn: (r) => r._measurement == "Temperature_Data" or r._measurement == "Humidity_Data" or r._measurement == "LDR_Data")
-      |> filter(fn: (r) => r._field == "value")
+      |> filter(fn: (r) => r._measurement == "Bilik_1")
+      |> filter(fn: (r) => r._field == "temperature" or r._field == "humidity" or r._field == "light_density")
       |> aggregateWindow(every: 1h, fn: mean, createEmpty: false)
-      |> keep(columns: ["_time", "_value", "_measurement"])
+      |> keep(columns: ["_time", "_value", "_field"])
   `;
 
   const rows = await executeFluxQuery(query);
@@ -109,9 +109,9 @@ export const fetchMeanHourlyData = async (timeRange: string = '-24h'): Promise<M
     const entry = timeMap.get(t);
     const val = parseFloat(row._value);
     
-    if (row._measurement === 'Temperature_Data') entry.mean_temperature = val;
-    else if (row._measurement === 'Humidity_Data') entry.mean_humidity = val;
-    else if (row._measurement === 'LDR_Data') entry.mean_ldr = val;
+    if (row._field === 'temperature') entry.mean_temperature = val;
+    else if (row._field === 'humidity') entry.mean_humidity = val;
+    else if (row._field === 'light_density') entry.mean_ldr = val;
   });
 
   // Sort chronologically (assuming map order might be off, but it usually follows insertion. Let's parse time to sort properly if needed, but since we map formatted strings, we can just return the values)

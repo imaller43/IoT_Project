@@ -8,7 +8,7 @@ interface MqttContextType {
   temperature: number;
   humidity: number;
   lightDensity: number;
-  publishSwitch: (switchId: number, state: boolean) => void;
+  publishSwitch: (topic: string, state: boolean) => void;
 }
 
 const MqttContext = createContext<MqttContextType | undefined>(undefined);
@@ -47,9 +47,7 @@ export const MqttProvider: React.FC<MqttProviderProps> = ({ children }) => {
     mqttClient.on('connect', () => {
       console.log('Connected to MQTT Broker successfully!');
       setIsConnected(true);
-      mqttClient.subscribe('sapura/project/dht11/temperature');
-      mqttClient.subscribe('sapura/project/dht11/humidity');
-      mqttClient.subscribe('sapura/project/ldr');
+      mqttClient.subscribe('sapura/bilik1/data');
     });
 
     mqttClient.on('error', (err) => {
@@ -61,24 +59,16 @@ export const MqttProvider: React.FC<MqttProviderProps> = ({ children }) => {
     mqttClient.on('offline', () => setIsConnected(false));
 
     mqttClient.on('message', (topic, message) => {
-      const msgStr = message.toString();
-      let val = parseFloat(msgStr);
-
-      if (isNaN(val)) {
+      if (topic === 'sapura/bilik1/data') {
         try {
-          const jsonObj = JSON.parse(msgStr);
-          val = parseFloat(jsonObj.value ?? jsonObj.val ?? jsonObj.temperature ?? jsonObj.humidity ?? jsonObj.ldr);
-        } catch (e) {}
-      }
-
-      if (isNaN(val)) return;
-
-      if (topic === 'sapura/project/dht11/temperature') {
-        setTemperature(val);
-      } else if (topic === 'sapura/project/dht11/humidity') {
-        setHumidity(val);
-      } else if (topic === 'sapura/project/ldr') {
-        setLightDensity(val);
+          const jsonObj = JSON.parse(message.toString());
+          if (jsonObj.temperature !== undefined) setTemperature(parseFloat(jsonObj.temperature));
+          if (jsonObj.humidity !== undefined) setHumidity(parseFloat(jsonObj.humidity));
+          if (jsonObj.light_density !== undefined) setLightDensity(parseFloat(jsonObj.light_density));
+          else if (jsonObj.ldr !== undefined) setLightDensity(parseFloat(jsonObj.ldr));
+        } catch (e) {
+          console.error("Failed to parse MQTT JSON payload", e);
+        }
       }
     });
 
@@ -87,10 +77,10 @@ export const MqttProvider: React.FC<MqttProviderProps> = ({ children }) => {
     };
   }, []);
 
-  const publishSwitch = (switchId: number, state: boolean) => {
+  const publishSwitch = (topic: string, state: boolean) => {
     if (client && client.connected) {
-      const topic = switchId === 1 ? 'sapura/project/switch/fan' : 'sapura/project/switch/interrupt';
-      const payload = switchId === 2 ? (state ? '0' : '1') : (state ? '1' : '0');
+      // Assuming interrupt is active low (0 for on, 1 for off) and others are active high.
+      const payload = topic.includes('interrupt') ? (state ? '0' : '1') : (state ? '1' : '0');
       client.publish(topic, payload);
     }
   };
