@@ -168,9 +168,10 @@ function App() {
             </div>
           </div>
 
-          <div key={activeTab} className="tab-transition">
+          <div className="tab-transition">
             {activeTab === 'room1' && (
               <RoomDashboard 
+                key="room1-dash"
                 roomId="room1" 
                 measurement="Bilik_1" 
                 temperature={roomsData['Bilik_1']?.temperature || 0}
@@ -183,6 +184,7 @@ function App() {
             )}
             {activeTab === 'room2' && (
               <RoomDashboard 
+                key="room2-dash"
                 roomId="room2" 
                 measurement="Bilik_2" 
                 temperature={roomsData['Bilik_2']?.temperature || 0}
@@ -195,6 +197,7 @@ function App() {
             )}
             {activeTab === 'room3' && (
               <RoomDashboard 
+                key="room3-dash"
                 roomId="room3" 
                 measurement="Bilik_3" 
                 temperature={roomsData['Bilik_3']?.temperature || 0}

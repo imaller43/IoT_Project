@@ -56,7 +56,7 @@ const formatTime = (isoString: string) => {
   return `${d.getDate().toString().padStart(2, '0')}/${(d.getMonth()+1).toString().padStart(2, '0')}/${d.getFullYear()} ${d.getHours().toString().padStart(2, '0')}:${d.getMinutes().toString().padStart(2, '0')}:${d.getSeconds().toString().padStart(2, '0')}`;
 };
 
-export const fetchHistoricalData = async (timeRange: string = '-1h', measurement: string = 'Bilik_1'): Promise<{temperature: SensorData[], humidity: SensorData[], lightDensity: SensorData[]}> => {
+export const fetchHistoricalData = async (timeRange: string, measurement: string): Promise<{temperature: SensorData[], humidity: SensorData[], lightDensity: SensorData[]}> => {
   const query = `
     from(bucket: "${BUCKET}")
       |> range(start: ${timeRange})
@@ -85,7 +85,7 @@ export const fetchHistoricalData = async (timeRange: string = '-1h', measurement
   return { temperature, humidity, lightDensity };
 };
 
-export const fetchMeanHourlyData = async (timeRange: string = '-24h', measurement: string = 'Bilik_1'): Promise<MeanData[]> => {
+export const fetchMeanHourlyData = async (timeRange: string, measurement: string): Promise<MeanData[]> => {
   const query = `
     from(bucket: "${BUCKET}")
       |> range(start: ${timeRange})
