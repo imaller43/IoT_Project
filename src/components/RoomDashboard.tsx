@@ -15,6 +15,7 @@ interface RoomDashboardProps {
   lightDensity: number;
   timeRange: string;
   hasSwitches?: boolean;
+  onDbStatusChange?: (status: boolean) => void;
 }
 
 const RoomDashboard: React.FC<RoomDashboardProps> = ({
@@ -24,7 +25,8 @@ const RoomDashboard: React.FC<RoomDashboardProps> = ({
   humidity,
   lightDensity,
   timeRange,
-  hasSwitches = false
+  hasSwitches = false,
+  onDbStatusChange
 }) => {
   // InfluxDB states
   const [temperatureHistory, setTemperatureHistory] = useState<SensorData[]>([]);
@@ -32,6 +34,12 @@ const RoomDashboard: React.FC<RoomDashboardProps> = ({
   const [lightDensityHistory, setLightDensityHistory] = useState<SensorData[]>([]);
   const [meanData, setMeanData] = useState<MeanData[]>([]);
   const [isDbConnected, setIsDbConnected] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    if (onDbStatusChange && isDbConnected !== null) {
+      onDbStatusChange(isDbConnected);
+    }
+  }, [isDbConnected, onDbStatusChange]);
 
   useEffect(() => {
     let rawInterval: NodeJS.Timeout;
@@ -143,16 +151,18 @@ const RoomDashboard: React.FC<RoomDashboardProps> = ({
             { dataKey: 'value', name: 'Light (LPD)', color: '#f59e0b' }
           ]}
         />
-        <ChartWidget
-          title="Mean Hourly Data"
-          data={meanData}
-          xAxisKey="time"
-          series={[
-            { dataKey: 'mean_humidity', name: 'Mean Humidity (%)', color: '#8b5cf6' },
-            { dataKey: 'mean_temperature', name: 'Mean Temp (°C)', color: '#ec4899' },
-            { dataKey: 'mean_ldr', name: 'Mean Light (LPD)', color: '#eab308' }
-          ]}
-        />
+        <div style={{ gridColumn: '1 / -1' }}>
+          <ChartWidget
+            title="Mean Hourly Data"
+            data={meanData}
+            xAxisKey="time"
+            series={[
+              { dataKey: 'mean_humidity', name: 'Mean Humidity (%)', color: '#3b82f6' },
+              { dataKey: 'mean_temperature', name: 'Mean Temp (°C)', color: '#10b981' },
+              { dataKey: 'mean_ldr', name: 'Mean Light (LPD)', color: '#f59e0b' }
+            ]}
+          />
+        </div>
       </div>
     </>
   );

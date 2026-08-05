@@ -21,6 +21,7 @@ function App() {
   const [activeTab, setActiveTab] = useState<'room1' | 'room2' | 'room3'>('room1');
   const [timeRange, setTimeRange] = useState<string>('-1h');
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isDbConnected, setIsDbConnected] = useState<boolean | null>(null);
   
   // Real-time Clock State
   const [currentTime, setCurrentTime] = useState(new Date());
@@ -80,6 +81,18 @@ function App() {
                     border: `1px solid ${isConnected ? 'rgba(16, 185, 129, 0.3)' : 'rgba(239, 68, 68, 0.3)'}`
                   }}>
                     {isConnected ? 'MQTT Connected' : 'MQTT Disconnected'}
+                  </span>
+                  <span style={{
+                    marginLeft: '0.5rem',
+                    padding: '4px 10px',
+                    borderRadius: '20px',
+                    fontSize: '0.75rem',
+                    fontWeight: 600,
+                    backgroundColor: isDbConnected === true ? 'rgba(16, 185, 129, 0.1)' : isDbConnected === false ? 'rgba(239, 68, 68, 0.1)' : 'rgba(156, 163, 175, 0.1)',
+                    color: isDbConnected === true ? '#10b981' : isDbConnected === false ? '#ef4444' : '#9ca3af',
+                    border: `1px solid ${isDbConnected === true ? 'rgba(16, 185, 129, 0.3)' : isDbConnected === false ? 'rgba(239, 68, 68, 0.3)' : 'rgba(156, 163, 175, 0.3)'}`
+                  }}>
+                    {isDbConnected === true ? 'DB Connected' : isDbConnected === false ? 'DB Error' : 'Connecting DB...'}
                   </span>
                 </div>
                 <div style={{ fontSize: '0.9rem', color: '#94a3b8', marginTop: '0.5rem', display: 'flex', gap: '0.5rem', fontWeight: 500 }}>
@@ -158,6 +171,7 @@ function App() {
               lightDensity={roomsData['Bilik_1']?.lightDensity || 0}
               timeRange={timeRange}
               hasSwitches={true}
+              onDbStatusChange={setIsDbConnected}
             />
           )}
           {activeTab === 'room2' && (
@@ -169,6 +183,7 @@ function App() {
               lightDensity={roomsData['Bilik_2']?.lightDensity || 0}
               timeRange={timeRange}
               hasSwitches={false}
+              onDbStatusChange={setIsDbConnected}
             />
           )}
           {activeTab === 'room3' && (
@@ -180,6 +195,7 @@ function App() {
               lightDensity={roomsData['Bilik_3']?.lightDensity || 0}
               timeRange={timeRange}
               hasSwitches={false}
+              onDbStatusChange={setIsDbConnected}
             />
           )}
         </div>
