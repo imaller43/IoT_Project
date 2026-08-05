@@ -1,16 +1,26 @@
 import { useEffect, useState } from 'react';
 import { SignedIn, SignedOut, SignIn, UserButton } from '@clerk/clerk-react';
-import { Activity } from 'lucide-react';
+import { Activity, Clock, ChevronDown, ChevronUp } from 'lucide-react';
 import { useMqtt } from './context/MqttContext';
 
 // Components
 import RoomDashboard from './components/RoomDashboard';
+
+const TIME_RANGES = [
+  { label: 'Past 1h', value: '-1h' },
+  { label: 'Past 6h', value: '-6h' },
+  { label: 'Past 12h', value: '-12h' },
+  { label: 'Past 24h', value: '-24h' },
+  { label: 'Past 7d', value: '-7d' }
+];
 
 function App() {
   const { isConnected, roomsData } = useMqtt();
 
   // Active Tab state
   const [activeTab, setActiveTab] = useState<'room1' | 'room2' | 'room3'>('room1');
+  const [timeRange, setTimeRange] = useState<string>('-1h');
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   
   // Real-time Clock State
   const [currentTime, setCurrentTime] = useState(new Date());
@@ -80,6 +90,38 @@ function App() {
               </div>
 
               <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                <div className="custom-dropdown-container">
+                  <button 
+                    className={`custom-dropdown-button ${isDropdownOpen ? 'open' : ''}`}
+                    onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <Clock size={16} />
+                      {TIME_RANGES.find(r => r.value === timeRange)?.label || 'Past 1h'}
+                    </div>
+                    {isDropdownOpen ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+                  </button>
+
+                  {isDropdownOpen && (
+                    <>
+                      <div className="dropdown-overlay" onClick={() => setIsDropdownOpen(false)}></div>
+                      <div className="custom-dropdown-menu">
+                        {TIME_RANGES.map(range => (
+                          <div
+                            key={range.value}
+                            className={`custom-dropdown-item ${timeRange === range.value ? 'active' : ''}`}
+                            onClick={() => {
+                              setTimeRange(range.value);
+                              setIsDropdownOpen(false);
+                            }}
+                          >
+                            {range.label}
+                          </div>
+                        ))}
+                      </div>
+                    </>
+                  )}
+                </div>
                 <UserButton afterSignOutUrl="/" appearance={{ elements: { userButtonAvatarBox: { width: 36, height: 36 } } }} />
               </div>
             </div>
@@ -114,6 +156,7 @@ function App() {
               temperature={roomsData['Bilik_1']?.temperature || 0}
               humidity={roomsData['Bilik_1']?.humidity || 0}
               lightDensity={roomsData['Bilik_1']?.lightDensity || 0}
+              timeRange={timeRange}
               hasSwitches={true}
             />
           )}
@@ -124,6 +167,7 @@ function App() {
               temperature={roomsData['Bilik_2']?.temperature || 0}
               humidity={roomsData['Bilik_2']?.humidity || 0}
               lightDensity={roomsData['Bilik_2']?.lightDensity || 0}
+              timeRange={timeRange}
               hasSwitches={false}
             />
           )}
@@ -134,6 +178,7 @@ function App() {
               temperature={roomsData['Bilik_3']?.temperature || 0}
               humidity={roomsData['Bilik_3']?.humidity || 0}
               lightDensity={roomsData['Bilik_3']?.lightDensity || 0}
+              timeRange={timeRange}
               hasSwitches={false}
             />
           )}

@@ -13,16 +13,9 @@ interface RoomDashboardProps {
   temperature: number;
   humidity: number;
   lightDensity: number;
+  timeRange: string;
   hasSwitches?: boolean;
 }
-
-const TIME_RANGES = [
-  { label: 'Past 1h', value: '-1h' },
-  { label: 'Past 6h', value: '-6h' },
-  { label: 'Past 12h', value: '-12h' },
-  { label: 'Past 24h', value: '-24h' },
-  { label: 'Past 7d', value: '-7d' }
-];
 
 const RoomDashboard: React.FC<RoomDashboardProps> = ({
   roomId,
@@ -30,11 +23,9 @@ const RoomDashboard: React.FC<RoomDashboardProps> = ({
   temperature,
   humidity,
   lightDensity,
+  timeRange,
   hasSwitches = false
 }) => {
-  const [timeRange, setTimeRange] = useState<string>('-1h');
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-
   // InfluxDB states
   const [temperatureHistory, setTemperatureHistory] = useState<SensorData[]>([]);
   const [humidityHistory, setHumidityHistory] = useState<SensorData[]>([]);
@@ -91,41 +82,6 @@ const RoomDashboard: React.FC<RoomDashboardProps> = ({
 
   return (
     <>
-      <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '1.5rem', marginTop: '-0.5rem' }}>
-        <div className="custom-dropdown-container" style={{ zIndex: 40 }}>
-          <button 
-            className={`custom-dropdown-button ${isDropdownOpen ? 'open' : ''}`}
-            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-          >
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <Clock size={16} />
-              {TIME_RANGES.find(r => r.value === timeRange)?.label || 'Past 1h'}
-            </div>
-            {isDropdownOpen ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
-          </button>
-
-          {isDropdownOpen && (
-            <>
-              <div className="dropdown-overlay" onClick={() => setIsDropdownOpen(false)}></div>
-              <div className="custom-dropdown-menu">
-                {TIME_RANGES.map(range => (
-                  <div
-                    key={range.value}
-                    className={`custom-dropdown-item ${timeRange === range.value ? 'active' : ''}`}
-                    onClick={() => {
-                      setTimeRange(range.value);
-                      setIsDropdownOpen(false);
-                    }}
-                  >
-                    {range.label}
-                  </div>
-                ))}
-              </div>
-            </>
-          )}
-        </div>
-      </div>
-
       {hasSwitches && (
         <div className="switches-container">
           <SwitchControl />
