@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { UserButton } from '@clerk/clerk-react';
-import { Activity, Clock, ChevronDown, ChevronUp } from 'lucide-react';
+import { Activity, Clock, ChevronDown, ChevronUp, Sun, Moon } from 'lucide-react';
 import { useMqtt } from './context/MqttContext';
 
 // Components
@@ -24,9 +24,27 @@ function App() {
   const [timeRange, setTimeRange] = useState<string>('-1h');
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isDbConnected, setIsDbConnected] = useState<boolean | null>(null);
+
+  // Theme State
+  const [theme, setTheme] = useState<'light' | 'dark'>(() => {
+    const saved = localStorage.getItem('theme');
+    return (saved === 'light' || saved === 'dark') ? saved : 'dark';
+  });
+
+  useEffect(() => {
+    document.body.classList.toggle('light-mode', theme === 'light');
+    localStorage.setItem('theme', theme);
+  }, [theme]);
   
   // Real-time Clock State
   const [currentTime, setCurrentTime] = useState(new Date());
+
+  useEffect(() => {
+    document.title = "Dashboard";
+    return () => {
+      document.title = "Log In to Dashboard"; // Reset when unmounted (logged out)
+    };
+  }, []);
 
   useEffect(() => {
     const clockInterval = setInterval(() => setCurrentTime(new Date()), 1000);
@@ -63,14 +81,14 @@ function App() {
                     borderRadius: '20px',
                     fontSize: '0.75rem',
                     fontWeight: 600,
-                    backgroundColor: isDbConnected === true ? 'rgba(16, 185, 129, 0.1)' : isDbConnected === false ? 'rgba(239, 68, 68, 0.1)' : 'rgba(156, 163, 175, 0.1)',
-                    color: isDbConnected === true ? '#10b981' : isDbConnected === false ? '#ef4444' : '#9ca3af',
-                    border: `1px solid ${isDbConnected === true ? 'rgba(16, 185, 129, 0.3)' : isDbConnected === false ? 'rgba(239, 68, 68, 0.3)' : 'rgba(156, 163, 175, 0.3)'}`
+                    backgroundColor: isDbConnected === true ? 'rgba(16, 185, 129, 0.1)' : isDbConnected === false ? 'rgba(239, 68, 68, 0.1)' : 'var(--switch-bg)',
+                    color: isDbConnected === true ? '#10b981' : isDbConnected === false ? '#ef4444' : 'var(--text-secondary)',
+                    border: `1px solid ${isDbConnected === true ? 'rgba(16, 185, 129, 0.3)' : isDbConnected === false ? 'rgba(239, 68, 68, 0.3)' : 'var(--panel-border)'}`
                   }}>
                     {isDbConnected === true ? 'DB Connected' : isDbConnected === false ? 'DB Error' : 'Connecting DB...'}
                   </span>
                 </div>
-                <div style={{ fontSize: '0.9rem', color: '#94a3b8', marginTop: '0.5rem', display: 'flex', gap: '0.5rem', fontWeight: 500 }}>
+                <div style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', marginTop: '0.5rem', display: 'flex', gap: '0.5rem', fontWeight: 500 }}>
                   <span>{currentTime.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</span>
                   <span>|</span>
                   <span>{currentTime.toLocaleTimeString('en-US')}</span>
@@ -110,6 +128,12 @@ function App() {
                     </>
                   )}
                 </div>
+                <button 
+                  onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
+                  style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: 'var(--text-primary)', display: 'flex', alignItems: 'center', padding: '8px' }}
+                >
+                  {theme === 'light' ? <Moon size={20} /> : <Sun size={20} />}
+                </button>
                 <UserButton afterSignOutUrl="/" appearance={{ elements: { userButtonAvatarBox: { width: 36, height: 36 } } }} />
               </div>
             </div>

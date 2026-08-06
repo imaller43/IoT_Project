@@ -42,10 +42,10 @@ const ChartWidget: React.FC<ChartWidgetProps> = ({ title, data, series, xAxisKey
                 </linearGradient>
               ))}
             </defs>
-            <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.2)" vertical={false} />
+            <CartesianGrid strokeDasharray="3 3" stroke="var(--chart-grid)" vertical={false} />
             <XAxis 
               dataKey={xAxisKey} 
-              stroke="#adb5bd" 
+              stroke="var(--text-secondary)" 
               fontSize={11} 
               tickMargin={10}
               tickFormatter={(val) => {
@@ -55,11 +55,11 @@ const ChartWidget: React.FC<ChartWidgetProps> = ({ title, data, series, xAxisKey
                 return parts.length > 1 ? parts[1] : val;
               }}
             />
-            <YAxis stroke="#adb5bd" fontSize={11} tickMargin={10} />
+            <YAxis stroke="var(--text-secondary)" fontSize={11} tickMargin={10} />
             <Tooltip 
-              contentStyle={{ backgroundColor: 'rgba(15, 17, 26, 0.9)', borderColor: 'rgba(255,255,255,0.1)', borderRadius: '8px' }}
+              contentStyle={{ backgroundColor: 'var(--chart-tooltip-bg)', borderColor: 'var(--panel-border)', borderRadius: '8px' }}
               itemStyle={{ fontSize: '0.875rem' }}
-              labelStyle={{ color: '#adb5bd', marginBottom: '0.5rem', fontSize: '0.75rem' }}
+              labelStyle={{ color: 'var(--text-secondary)', marginBottom: '0.5rem', fontSize: '0.75rem' }}
             />
             <Legend wrapperStyle={{ fontSize: '12px' }} />
             {series.map((s) => (

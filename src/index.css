@@ -10,6 +10,72 @@
   --danger-color: #ef4444;
   --success-color: #10b981;
   --warning-color: #f59e0b;
+  --header-bg: var(--bg-color);
+  --table-header-bg: rgba(15, 17, 26, 0.95);
+  --table-border: rgba(255, 255, 255, 0.02);
+  --table-hover: rgba(255, 255, 255, 0.02);
+  --switch-bg: rgba(0, 0, 0, 0.2);
+  --switch-slider: #6b7280;
+  --switch-thumb: #111827;
+  --switch-thumb-border: #4b5563;
+  --switch-thumb-text: #9ca3af;
+  --dropdown-btn-bg: #373b4d;
+  --dropdown-btn-hover: #42475a;
+  --dropdown-btn-text: #ffffff;
+  --dropdown-menu-bg: #1f2128;
+  --dropdown-item-text: #e2e8f0;
+  --dropdown-item-hover: rgba(255, 255, 255, 0.05);
+  --dropdown-item-active: rgba(255, 255, 255, 0.1);
+  --tab-bg: rgba(255, 255, 255, 0.03);
+  --tab-border: rgba(255, 255, 255, 0.1);
+  --tab-text: #94a3b8;
+  --tab-hover-bg: rgba(255, 255, 255, 0.08);
+  --tab-hover-text: #f1f5f9;
+  --tab-active-bg: rgba(165, 180, 252, 0.1);
+  --tab-active-text: #a5b4fc;
+  --tab-active-border: rgba(165, 180, 252, 0.3);
+  --chart-tooltip-bg: rgba(15, 17, 26, 0.9);
+  --chart-grid: rgba(255, 255, 255, 0.2);
+  --login-bg-solid: #0f172a;
+  --login-bg-gradient: radial-gradient(circle at 50% 0%, #1e293b 0%, #0f172a 100%);
+  --glass-blur-bg: rgba(168, 85, 247, 0.2);
+}
+
+body.light-mode {
+  --bg-color: #f1f5f9;
+  --panel-bg: rgba(255, 255, 255, 0.7);
+  --panel-border: rgba(0, 0, 0, 0.05);
+  --text-primary: #1e293b;
+  --text-secondary: #64748b;
+  --header-bg: var(--bg-color);
+  --table-header-bg: #f8fafc;
+  --table-border: rgba(0, 0, 0, 0.05);
+  --table-hover: rgba(0, 0, 0, 0.02);
+  --switch-bg: rgba(0, 0, 0, 0.05);
+  --switch-slider: #cbd5e1;
+  --switch-thumb: #ffffff;
+  --switch-thumb-border: #94a3b8;
+  --switch-thumb-text: #64748b;
+  --dropdown-btn-bg: #e2e8f0;
+  --dropdown-btn-hover: #cbd5e1;
+  --dropdown-btn-text: #1e293b;
+  --dropdown-menu-bg: #ffffff;
+  --dropdown-item-text: #475569;
+  --dropdown-item-hover: rgba(0, 0, 0, 0.05);
+  --dropdown-item-active: rgba(59, 130, 246, 0.1);
+  --tab-bg: rgba(0, 0, 0, 0.02);
+  --tab-border: rgba(0, 0, 0, 0.05);
+  --tab-text: #64748b;
+  --tab-hover-bg: rgba(0, 0, 0, 0.05);
+  --tab-hover-text: #1e293b;
+  --tab-active-bg: rgba(59, 130, 246, 0.08);
+  --tab-active-text: #3b82f6;
+  --tab-active-border: rgba(59, 130, 246, 0.3);
+  --chart-tooltip-bg: rgba(255, 255, 255, 0.95);
+  --chart-grid: rgba(0, 0, 0, 0.1);
+  --login-bg-solid: #f8fafc;
+  --login-bg-gradient: radial-gradient(circle at 50% 0%, #ffffff 0%, #f8fafc 100%);
+  --glass-blur-bg: rgba(168, 85, 247, 0.1);
 }
 
 * {
@@ -135,7 +201,7 @@ table {
 th {
   position: sticky;
   top: 0;
-  background-color: rgba(15, 17, 26, 0.95);
+  background-color: var(--table-header-bg);
   color: var(--text-secondary);
   font-weight: 500;
   text-align: left;
@@ -146,11 +212,11 @@ th {
 
 td {
   padding: 0.75rem 1rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.02);
+  border-bottom: 1px solid var(--table-border);
 }
 
 tr:hover {
-  background-color: rgba(255, 255, 255, 0.02);
+  background-color: var(--table-hover);
 }
 
 /* Switch Styles */
@@ -161,7 +227,7 @@ tr:hover {
   justify-content: center;
   gap: 1.25rem;
   padding: 1.5rem;
-  background: rgba(0, 0, 0, 0.2);
+  background: var(--switch-bg);
   border-radius: 12px;
   margin-bottom: 0.75rem;
 }
@@ -193,7 +259,7 @@ tr:hover {
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: #6b7280;
+  background-color: var(--switch-slider);
   transition: .4s;
   border-radius: 44px;
 }
@@ -207,13 +273,13 @@ tr:hover {
   font-size: 16px;
   font-family: 'Inter', sans-serif;
   font-weight: 700;
-  color: #9ca3af;
+  color: var(--switch-thumb-text);
   height: 56px;
   width: 56px;
   left: -6px;
   bottom: -6px;
-  background-color: #111827;
-  border: 4px solid #4b5563;
+  background-color: var(--switch-thumb);
+  border: 4px solid var(--switch-thumb-border);
   transition: .4s;
   border-radius: 50%;
   box-shadow: 0 4px 6px rgba(0,0,0,0.5);
@@ -241,8 +307,8 @@ input:checked + .slider:before {
 }
 
 .custom-dropdown-button {
-  background-color: #373b4d;
-  color: #ffffff;
+  background-color: var(--dropdown-btn-bg);
+  color: var(--dropdown-btn-text);
   padding: 8px 16px;
   border: none;
   border-radius: 4px;
@@ -259,7 +325,7 @@ input:checked + .slider:before {
 }
 
 .custom-dropdown-button:hover {
-  background-color: #42475a;
+  background-color: var(--dropdown-btn-hover);
 }
 
 .custom-dropdown-button.open {
@@ -272,7 +338,7 @@ input:checked + .slider:before {
   top: 100%;
   left: 0;
   right: 0;
-  background-color: #1f2128;
+  background-color: var(--dropdown-menu-bg);
   border-radius: 0 0 4px 4px;
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
   z-index: 1000;
@@ -289,13 +355,13 @@ input:checked + .slider:before {
   background: rgba(0,0,0,0.2);
 }
 .custom-dropdown-menu::-webkit-scrollbar-thumb {
-  background: #373b4d;
+  background: var(--dropdown-btn-bg);
   border-radius: 3px;
 }
 
 .custom-dropdown-item {
   padding: 12px 16px;
-  color: #e2e8f0;
+  color: var(--dropdown-item-text);
   font-size: 0.9rem;
   cursor: pointer;
   transition: background-color 0.15s;
@@ -303,11 +369,11 @@ input:checked + .slider:before {
 }
 
 .custom-dropdown-item:hover {
-  background-color: rgba(255, 255, 255, 0.05);
+  background-color: var(--dropdown-item-hover);
 }
 
 .custom-dropdown-item.active {
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: var(--dropdown-item-active);
   border-left: 2px solid #a5b4fc;
 }
 
@@ -335,28 +401,28 @@ input:checked + .slider:before {
   display: flex;
   gap: 8px;
   margin-top: 1rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid var(--tab-border);
   width: 100%;
 }
 .browser-tab {
   padding: 8px 24px;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: var(--tab-bg);
+  border: 1px solid var(--tab-border);
   border-bottom: none;
   border-radius: 8px 8px 0 0;
-  color: #94a3b8;
+  color: var(--tab-text);
   cursor: pointer;
   font-weight: 500;
   transition: all 0.2s ease;
 }
 .browser-tab:hover {
-  background: rgba(255, 255, 255, 0.08);
-  color: #f1f5f9;
+  background: var(--tab-hover-bg);
+  color: var(--tab-hover-text);
 }
 .browser-tab.active {
-  background: rgba(165, 180, 252, 0.1);
-  color: #a5b4fc;
-  border-color: rgba(165, 180, 252, 0.3);
+  background: var(--tab-active-bg);
+  color: var(--tab-active-text);
+  border-color: var(--tab-active-border);
   position: relative;
 }
 .browser-tab.active::after {

@@ -80,7 +80,7 @@ const GaugeWidget: React.FC<GaugeWidgetProps> = ({
             type: "needle",
             elastic: true,
             animationDelay: 0,
-            color: '#adb5bd'
+            color: 'var(--text-secondary)'
           }}
           value={value}
           minValue={minValue}
@@ -89,7 +89,7 @@ const GaugeWidget: React.FC<GaugeWidgetProps> = ({
             valueLabel: { hide: true },
             tickLabels: {
               type: 'outer',
-              defaultTickValueConfig: { formatTextValue: (v: any) => v.toString(), style: {fontSize: 10, fill: '#adb5bd'} },
+              defaultTickValueConfig: { formatTextValue: (v: any) => v.toString(), style: {fontSize: 10, fill: 'var(--text-secondary)'} },
               ticks: [
                 { value: minValue },
                 { value: minValue + (maxValue-minValue)*0.2 },

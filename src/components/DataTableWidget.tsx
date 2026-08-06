@@ -24,10 +24,10 @@ const DataTableWidget: React.FC<DataTableWidgetProps> = ({
         <table>
           <thead>
             <tr>
-              <th style={{width: '60%', backgroundColor: '#1a1d2d'}}>Time</th>
+              <th style={{width: '60%', backgroundColor: 'var(--table-header-bg)'}}>Time</th>
               <th style={{
                 width: '40%', 
-                background: `linear-gradient(0deg, ${colorHighlight}33, ${colorHighlight}33), #1a1d2d`, 
+                background: `linear-gradient(0deg, ${colorHighlight}33, ${colorHighlight}33), var(--table-header-bg)`, 
                 color: colorHighlight
               }}>{valueLabel}</th>
             </tr>
@@ -36,7 +36,7 @@ const DataTableWidget: React.FC<DataTableWidgetProps> = ({
             {[...data].reverse().map((row, idx) => (
               <tr key={idx}>
                 <td>{row.time}</td>
-                <td style={{backgroundColor: `${colorHighlight}11`, color: '#fff'}}>{row.value.toFixed(2)}</td>
+                <td style={{backgroundColor: `${colorHighlight}11`, color: 'var(--text-primary)', fontWeight: 600}}>{row.value.toFixed(2)}</td>
               </tr>
             ))}
             {data.length === 0 && (
