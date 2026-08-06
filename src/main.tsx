@@ -34,7 +34,14 @@ function ClerkWithRoutes() {
       routerPush={(to) => navigate(to)}
       routerReplace={(to) => navigate(to, { replace: true })}
       afterSignOutUrl="/login"
-      appearance={{ baseTheme: theme === 'light' ? dark : undefined }}
+      appearance={{ 
+        baseTheme: theme === 'light' ? dark : undefined,
+        elements: {
+          card: {
+            boxShadow: 'var(--login-box-shadow)'
+          }
+        }
+      }}
     >
       <MqttProvider>
         <Routes>
