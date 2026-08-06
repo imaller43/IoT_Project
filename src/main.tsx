@@ -73,8 +73,8 @@ function ClerkWithRoutes() {
               <div style={{ position: 'relative' }}>
                 <div style={{
                   position: 'absolute',
-                  inset: '-60px',
-                  background: 'radial-gradient(circle, var(--glass-blur-bg) 0%, transparent 80%)',
+                  inset: '-80px',
+                  background: 'var(--login-aura)',
                   filter: 'blur(30px)',
                   zIndex: 0
                 }} />

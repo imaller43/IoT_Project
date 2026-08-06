@@ -19,6 +19,7 @@ Kemahiran (*skill*) ini adalah buku peraturan khusus untuk projek ini. Sila patu
 - Pengesahan pengguna (*Authentication*) diuruskan secara eksklusif oleh `@clerk/clerk-react`.
 - Kotak log masuk (*Clerk Sign-In Box*) di halaman `/login` **wajib** menggunakan logik tema keterbalikan (*inverse*): Jika tema aplikasi *Light*, kotak mesti *Dark*. Jika aplikasi *Dark*, kotak mesti *Light* (Lalai).
 - Kotak log masuk juga **wajib** diletakkan bayang-bayang di belakangnya (*box-shadow*) melalui panggil CSS variable `var(--login-box-shadow)` dalam tetapan `appearance`.
+- **Wajib** meletakkan efek *radial-gradient* bercahaya (aura) di belakang kotak log masuk melalui pembolehubah `var(--login-aura)` supaya antaramuka nampak lebih premium dan tidak tenggelam.
 
 ## 3. Pembangunan Komponen & Widget
 - Pembangunan widget carta dan jadual perlu responsif secara automatik kepada perubahan tema (Light/Dark).

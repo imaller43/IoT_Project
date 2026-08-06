@@ -41,6 +41,7 @@
   --glass-blur-bg: rgba(168, 85, 247, 0.2);
   --title-gradient: linear-gradient(90deg, #fff, #a5b4fc);
   --login-box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  --login-aura: radial-gradient(circle, rgba(168, 85, 247, 0.4) 0%, rgba(59, 130, 246, 0.2) 40%, transparent 70%);
 }
 
 body.light-mode {
@@ -80,6 +81,7 @@ body.light-mode {
   --glass-blur-bg: rgba(168, 85, 247, 0.1);
   --title-gradient: linear-gradient(90deg, #1e293b, #3b82f6);
   --login-box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.3);
+  --login-aura: radial-gradient(circle, rgba(59, 130, 246, 0.4) 0%, rgba(147, 197, 253, 0.2) 50%, transparent 70%);
 }
 
 * {
