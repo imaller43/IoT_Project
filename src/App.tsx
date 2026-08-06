@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { SignedIn, SignedOut, SignIn, UserButton } from '@clerk/clerk-react';
+import { UserButton } from '@clerk/clerk-react';
 import { Activity, Clock, ChevronDown, ChevronUp } from 'lucide-react';
 import { useMqtt } from './context/MqttContext';
 
@@ -38,38 +38,7 @@ function App() {
   }, [activeTab]);
 
   return (
-    <>
-      <SignedOut>
-        <div style={{ 
-          display: 'flex', 
-          flexDirection: 'column', 
-          justifyContent: 'center', 
-          alignItems: 'center', 
-          height: '100vh', 
-          width: '100vw',
-          backgroundColor: '#0f172a',
-          backgroundImage: 'radial-gradient(circle at 50% 0%, #1e293b 0%, #0f172a 100%)'
-        }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '2rem' }}>
-            <Activity size={40} color="#a5b4fc" />
-            <h1 style={{ color: '#a5b4fc', fontSize: '2.5rem', fontWeight: 'bold', margin: 0, fontFamily: 'system-ui, -apple-system, sans-serif' }}>Sensor Value</h1>
-          </div>
-          <div style={{ position: 'relative' }}>
-            <div style={{ 
-              position: 'absolute', 
-              inset: '-60px', 
-              background: 'radial-gradient(circle, rgba(168, 85, 247, 0.85) 0%, rgba(168, 85, 247, 0.2) 50%, transparent 80%)',
-              filter: 'blur(30px)',
-              zIndex: 0 
-            }} />
-            <div style={{ position: 'relative', zIndex: 1 }}>
-              <SignIn />
-            </div>
-          </div>
-        </div>
-      </SignedOut>
-      <SignedIn>
-        <div className="dashboard-container">
+    <div className="dashboard-container">
           <div className="dashboard-header" style={{ display: 'flex', flexDirection: 'column' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', width: '100%' }}>
               <div style={{ display: 'flex', flexDirection: 'column' }}>
@@ -210,8 +179,6 @@ function App() {
             )}
           </div>
         </div>
-      </SignedIn>
-    </>
   );
 }
 
