@@ -60,8 +60,8 @@ function ClerkWithRoutes() {
               </div>
 
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '2rem' }}>
-                <Activity size={40} color="#a5b4fc" />
-                <h1 style={{ color: '#a5b4fc', fontSize: '2.5rem', fontWeight: 'bold', margin: 0, fontFamily: 'system-ui, -apple-system, sans-serif' }}>IoT Dashboard</h1>
+                <Activity size={40} color={theme === 'light' ? '#3b82f6' : '#a5b4fc'} />
+                <h1 style={{ color: theme === 'light' ? '#1e293b' : '#a5b4fc', fontSize: '2.5rem', fontWeight: 'bold', margin: 0, fontFamily: 'system-ui, -apple-system, sans-serif' }}>IoT Dashboard</h1>
               </div>
               <div style={{ position: 'relative' }}>
                 <div style={{
