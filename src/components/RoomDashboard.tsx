@@ -5,7 +5,7 @@ import GaugeWidget from './GaugeWidget';
 import DataTableWidget from './DataTableWidget';
 import ChartWidget from './ChartWidget';
 import SwitchControl from './SwitchControl';
-import { Clock, ChevronDown, ChevronUp } from 'lucide-react';
+// Removed unused lucide-react imports
 
 interface RoomDashboardProps {
   roomId: string;
@@ -19,7 +19,6 @@ interface RoomDashboardProps {
 }
 
 const RoomDashboard: React.FC<RoomDashboardProps> = ({
-  roomId,
   measurement,
   temperature,
   humidity,

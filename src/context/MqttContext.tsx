@@ -40,11 +40,15 @@ export const MqttProvider: React.FC<MqttProviderProps> = ({ children }) => {
   });
 
   useEffect(() => {
-    const mqttUrl = `ws://${window.location.host}/mqtt`;
+    const mqttUrl = import.meta.env.VITE_MQTT_URL;
+    const mqttUsername = import.meta.env.VITE_MQTT_USER;
+    const mqttPassword = import.meta.env.VITE_MQTT_PASSWORD;
+
     const mqttClient = mqtt.connect(mqttUrl, {
-      username: 'Dashboard',
-      password: '123456789',
-      clientId: 'IoT_Dashboard'
+      username: mqttUsername,
+      password: mqttPassword,
+      clientId: 'IoT_Dashboard_' + Math.random().toString(16).substring(2, 8),
+      keepalive: 30, // Good for Cloudflare WebSockets
     });
 
     setClient(mqttClient);

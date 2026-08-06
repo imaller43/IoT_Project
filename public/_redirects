@@ -1,0 +1,2 @@
+/api/*  https://influx.ikmaliman.my/api/:splat  200
+/*      /index.html   200

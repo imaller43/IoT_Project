@@ -5,6 +5,9 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   server: {
+    host: '0.0.0.0', // Listen on all IPs
+    cors: true,
+    allowedHosts: true, // Allow all host headers (needed for Cloudflare Tunnel)
     proxy: {
       '/api': {
         target: 'http://10.12.27.21:8086',
