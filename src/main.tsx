@@ -73,9 +73,9 @@ function ClerkWithRoutes() {
               <div style={{ position: 'relative' }}>
                 <div style={{
                   position: 'absolute',
-                  inset: '-80px',
+                  inset: '-120px',
                   background: 'var(--login-aura)',
-                  filter: 'blur(30px)',
+                  filter: 'blur(50px)',
                   zIndex: 0
                 }} />
                 <div style={{ position: 'relative', zIndex: 1 }}>
