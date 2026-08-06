@@ -16,7 +16,12 @@ const TIME_RANGES = [
   { label: 'Past 7d', value: '-7d' }
 ];
 
-function App() {
+interface AppProps {
+  theme: 'light' | 'dark';
+  setTheme: (theme: 'light' | 'dark') => void;
+}
+
+function App({ theme, setTheme }: AppProps) {
   const { isConnected, roomsData } = useMqtt();
 
   // Active Tab state
@@ -24,17 +29,6 @@ function App() {
   const [timeRange, setTimeRange] = useState<string>('-1h');
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isDbConnected, setIsDbConnected] = useState<boolean | null>(null);
-
-  // Theme State
-  const [theme, setTheme] = useState<'light' | 'dark'>(() => {
-    const saved = localStorage.getItem('theme');
-    return (saved === 'light' || saved === 'dark') ? saved : 'dark';
-  });
-
-  useEffect(() => {
-    document.body.classList.toggle('light-mode', theme === 'light');
-    localStorage.setItem('theme', theme);
-  }, [theme]);
   
   // Real-time Clock State
   const [currentTime, setCurrentTime] = useState(new Date());
