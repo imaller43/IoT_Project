@@ -9,7 +9,7 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['favicon1.png'],
+      includeAssets: ['favicon.png'],
       manifest: {
         name: 'IoT Dashboard',
         short_name: 'IoT Dashboard',
@@ -19,17 +19,17 @@ export default defineConfig({
         display: 'standalone',
         icons: [
           {
-            src: '/favicon1.png',
+            src: '/favicon.png',
             sizes: '192x192',
             type: 'image/png'
           },
           {
-            src: '/favicon1.png',
+            src: '/favicon.png',
             sizes: '512x512',
             type: 'image/png'
           },
           {
-            src: '/favicon1.png',
+            src: '/favicon.png',
             sizes: '512x512',
             type: 'image/png',
             purpose: 'any maskable'
