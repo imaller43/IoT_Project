@@ -31,7 +31,7 @@ function App({ theme, setTheme }: AppProps) {
       console.log('User inactive, signing out...');
       signOut();
     },
-    idleTime: 5000//15 * 60 * 1000 // 15 minutes default
+    idleTime: 60 * 60 * 1000 // 1 hour default
   });
 
   const { isConnected, roomsData } = useMqtt();

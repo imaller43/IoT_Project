@@ -23,6 +23,9 @@ Kemahiran (*skill*) ini adalah buku peraturan khusus untuk projek ini. Sila patu
 
 ## 3. Pembangunan Komponen & Widget
 - Pembangunan widget carta dan jadual perlu responsif secara automatik kepada perubahan tema (Light/Dark).
+- **Responsif Mobile**: Wajib memastikan susun atur grid (`top-grid`, `middle-grid`, `bottom-grid`, `switch-grid`) responsif terhadap saiz skrin. Jangan *hardcode* `grid-template-columns: repeat(3, 1fr)` tanpa `media queries` kerana ia akan memecahkan susun atur pada peranti mudah alih (walaupun dalam mod desktop/tablet). 
+- Gunakan `@media (max-width: 1024px)` untuk menukar grid kepada `1fr` supaya ia tersusun menegak (stacked) untuk paparan kecil.
+- Pastikan elemen `header` atau bekas utama (`container`) sentiasa menggunakan `width: 100%` supaya ia tidak mengecut ke sebelah kiri skrin ketika skrol mendatar (*horizontal overflow*).
 - Kekalkan reka bentuk komponen agar sentiasa boleh diguna semula (*reusable*).
 
 ## 4. Pantang Larang Projek ⚠️

@@ -100,6 +100,7 @@ body {
 
 .dashboard-container {
   padding: 1.5rem;
+  width: 100%;
   max-width: 1600px;
   margin: 0 auto;
   display: flex;
@@ -117,6 +118,7 @@ body {
   z-index: 50;
   background-color: var(--bg-color);
   padding: 1rem 0 0 0;
+  width: 100%;
 }
 
 .dashboard-title {
@@ -167,16 +169,35 @@ body {
   gap: 1.5rem;
 }
 
-@media (max-width: 1024px) {
-  .middle-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
 .bottom-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 1.5rem;
+}
+
+.switch-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  margin-top: 1rem;
+}
+
+@media (max-width: 1024px) {
+  .middle-grid, .bottom-grid {
+    grid-template-columns: 1fr;
+  }
+  .switch-grid {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .dashboard-container {
+    padding: 1rem;
+  }
+  .dashboard-title {
+    font-size: 1.25rem;
+  }
 }
 
 /* Table Styles */

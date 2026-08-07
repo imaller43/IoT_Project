@@ -18,7 +18,7 @@ const SwitchControl: React.FC = () => {
       <div className="panel-header">
         GPIO Control Switches
       </div>
-      <div style={{ marginTop: '1rem', display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1.5rem' }}>
+      <div className="switch-grid">
         <div className="switch-container">
           <span className="switch-label">FAN</span>
           <label className="toggle">
