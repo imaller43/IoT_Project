@@ -40,7 +40,7 @@ const SwitchControl: React.FC = () => {
           </label>
           {(switchStates.interruptHardware || switchStates.interruptTempOverride) && (
             <div style={{ color: '#ef4444', fontSize: '0.75rem', marginTop: '0.5rem', fontWeight: 600, textAlign: 'center' }}>
-              {switchStates.interruptTempOverride ? 'Override Activated : High Temperature' : 'Override Aktif'}
+              {switchStates.interruptTempOverride ? 'Override Activated : High Temperature' : 'Override Activated'}
             </div>
           )}
         </div>

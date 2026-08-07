@@ -9,25 +9,25 @@ export default defineConfig({
             registerType: 'autoUpdate',
             includeAssets: ['favicon1.png'],
             manifest: {
-                name: 'Sapura IoT Dashboard',
-                short_name: 'IoT Sapura',
+                name: 'IoT Dashboard',
+                short_name: 'IoT Dashboard',
                 description: 'Dashboard Kawalan IoT dan Pemantauan Masa Nyata',
                 theme_color: '#121212',
                 background_color: '#121212',
                 display: 'standalone',
                 icons: [
                     {
-                        src: 'favicon1.png',
+                        src: '/favicon1.png',
                         sizes: '192x192',
                         type: 'image/png'
                     },
                     {
-                        src: 'favicon1.png',
+                        src: '/favicon1.png',
                         sizes: '512x512',
                         type: 'image/png'
                     },
                     {
-                        src: 'favicon1.png',
+                        src: '/favicon1.png',
                         sizes: '512x512',
                         type: 'image/png',
                         purpose: 'any maskable'
