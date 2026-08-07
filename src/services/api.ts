@@ -56,12 +56,27 @@ const formatTime = (isoString: string) => {
   return `${d.getDate().toString().padStart(2, '0')}/${(d.getMonth()+1).toString().padStart(2, '0')}/${d.getFullYear()} ${d.getHours().toString().padStart(2, '0')}:${d.getMinutes().toString().padStart(2, '0')}:${d.getSeconds().toString().padStart(2, '0')}`;
 };
 
+const getAggregateWindow = (timeRange: string) => {
+  switch (timeRange) {
+    case '-30m': return '1m';
+    case '-1h': return '1m';
+    case '-3h': return '2m';
+    case '-6h': return '5m';
+    case '-12h': return '10m';
+    case '-24h': return '20m';
+    case '-7d': return '2h';
+    default: return '10m';
+  }
+};
+
 export const fetchHistoricalData = async (timeRange: string, measurement: string): Promise<{temperature: SensorData[], humidity: SensorData[], lightDensity: SensorData[]}> => {
+  const aggWindow = getAggregateWindow(timeRange);
   const query = `
     from(bucket: "${BUCKET}")
       |> range(start: ${timeRange})
       |> filter(fn: (r) => r._measurement == "${measurement}")
       |> filter(fn: (r) => r._field == "temperature" or r._field == "humidity" or r._field == "light_density")
+      |> aggregateWindow(every: ${aggWindow}, fn: mean, createEmpty: false)
       |> keep(columns: ["_time", "_value", "_field"])
   `;
 
