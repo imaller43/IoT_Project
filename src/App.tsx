@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
-import { UserButton } from '@clerk/clerk-react';
+import { UserButton, useAuth } from '@clerk/clerk-react';
 import { Activity, Clock, ChevronDown, ChevronUp, Sun, Moon } from 'lucide-react';
 import { useMqtt } from './context/MqttContext';
+import { useIdleTimeout } from './hooks/useIdleTimeout';
 
 // Components
 import RoomDashboard from './components/RoomDashboard';
@@ -22,6 +23,17 @@ interface AppProps {
 }
 
 function App({ theme, setTheme }: AppProps) {
+  const { signOut } = useAuth();
+  
+  // Initialize Auto-Logout on 15 minutes of inactivity
+  useIdleTimeout({ 
+    onIdle: () => {
+      console.log('User inactive, signing out...');
+      signOut();
+    },
+    // idleTime: 15 * 60 * 1000 // 15 minutes default
+  });
+
   const { isConnected, roomsData } = useMqtt();
 
   // Active Tab state
