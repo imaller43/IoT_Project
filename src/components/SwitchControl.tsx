@@ -33,7 +33,7 @@ const SwitchControl: React.FC = () => {
             <input
               type="checkbox"
               checked={switchStates.interrupt}
-              onChange={() => handleToggle('sapura/bilik1/switch/interrupt', switchStates.interrupt)}
+              onChange={() => handleToggle('sapura/bilik1/switch/interrupt1', switchStates.interrupt)}
             />
             <span className="slider"></span>
           </label>

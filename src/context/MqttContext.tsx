@@ -115,7 +115,7 @@ export const MqttProvider: React.FC<MqttProviderProps> = ({ children }) => {
         setSwitchStates(prev => ({
           ...prev,
           ...(switchType === 'fan' ? { fan: state } : {}),
-          ...(switchType === 'interrupt' ? { interrupt: stateStr === '0' } : {}), // Reverse logic for interrupt as per original code
+          ...(switchType === 'interrupt1' ? { interrupt: stateStr === '0' } : {}), // Reverse logic for interrupt as per original code
           ...(switchType === 'light' ? { light: state } : {})
         }));
       }
@@ -128,7 +128,7 @@ export const MqttProvider: React.FC<MqttProviderProps> = ({ children }) => {
 
   const publishSwitch = (topic: string, state: boolean) => {
     if (client && client.connected) {
-      const payload = topic.includes('interrupt') ? (state ? '0' : '1') : (state ? '1' : '0');
+      const payload = topic.includes('interrupt1') ? (state ? '0' : '1') : (state ? '1' : '0');
       client.publish(topic, payload, { retain: true });
     }
   };
