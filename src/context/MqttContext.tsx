@@ -54,7 +54,6 @@ export const MqttProvider: React.FC<MqttProviderProps> = ({ children }) => {
     setClient(mqttClient);
 
     mqttClient.on('connect', () => {
-      console.log('Connected to MQTT Broker successfully!');
       setIsConnected(true);
       mqttClient.subscribe('sapura/bilik1/data');
       mqttClient.subscribe('sapura/bilik2/data');

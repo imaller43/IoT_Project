@@ -29,7 +29,6 @@ function App({ theme, setTheme }: AppProps) {
   // Initialize Auto-Logout on 15 minutes of inactivity
   useIdleTimeout({
     onIdle: () => {
-      console.log('User inactive, signing out...');
       signOut();
     },
     idleTime: 60 * 60 * 1000 // 1 hour default
