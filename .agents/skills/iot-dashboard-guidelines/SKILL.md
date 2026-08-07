@@ -49,12 +49,15 @@ Kemahiran (*skill*) ini adalah buku peraturan khusus untuk projek ini. Sila patu
 ## 5. MQTT & Logik Suis Pintar (Hardware Override)
 - **Topik Pengasingan (Decoupled Topics)**: Untuk mengelakkan gelung suap balik (*feedback loop*) dan menyokong pengesahan perkakasan, kawalan suis dan maklum balas status diasingkan.
   - Dashboard *publish* (menghantar) ke: `sapura/bilik1/switch/interrupt`
-  - Node-RED / Perkakasan *publish* status fizikal sebenar ke: `sapura/bilik1/switch/interrupt1`
+  - Node-RED / Suis Fizikal *publish* status ke: `sapura/bilik1/switch/interrupt1`
+  - Node-RED / Sensor Suhu *publish* status ke: `sapura/bilik1/switch/interrupt2`
 - **Hardware Override (Pintas Perkakasan)**:
   - Jika suis fizikal ditekan (ON), Node-RED akan menghantar status aktif ke `interrupt1`.
-  - Dashboard akan mengesan status ini, lalu menghidupkan butang UI dan menjadikannya **TIDAK AKTIF (disabled)** dengan amaran "Override Aktif". 
-  - Selagi suis fizikal ON, aplikasi web tidak dapat mengawal lampu tersebut.
-  - Apabila suis fizikal dilepaskan (OFF), UI akan menetapkan semula (*reset*) kedudukan suis perisian kepada OFF secara automatik, dan menyegerakkan kembali status tersebut ke Node-RED.
+  - Jika suhu bilik tinggi (>= 27°C), Node-RED akan menghantar status aktif ke `interrupt2`.
+  - Dashboard akan mengesan mana-mana status ini, lalu menghidupkan butang UI dan menjadikannya **TIDAK AKTIF (disabled)**.
+  - Ia akan memaparkan amaran "Override Aktif" (jika `interrupt1`) atau "Override Activated : High Temperature" (jika `interrupt2`).
+  - Selagi mana-mana override aktif, aplikasi web tidak dapat mengawal lampu tersebut.
+  - Apabila override dilepaskan (OFF / Suhu kembali normal), UI akan menetapkan semula (*reset*) kedudukan suis perisian kepada OFF secara automatik, dan menyegerakkan kembali status tersebut ke Node-RED.
 
 ## 6. Pantang Larang Projek ⚠️
 - **Dilarang** membuang atau mendedahkan konfigurasi di dalam `VITE_CLERK_PUBLISHABLE_KEY`.
