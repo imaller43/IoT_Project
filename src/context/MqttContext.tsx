@@ -10,7 +10,8 @@ export interface RoomData {
 export interface SwitchStates {
   fan: boolean;
   interruptSoftware: boolean;
-  interruptHardware: boolean;
+  interruptHardware: boolean; // physical switch (interrupt1)
+  interruptTempOverride: boolean; // temperature override (interrupt2)
   light: boolean;
 }
 
@@ -51,11 +52,13 @@ export const MqttProvider: React.FC<MqttProviderProps> = ({ children }) => {
     fan: false,
     interruptSoftware: false,
     interruptHardware: false,
+    interruptTempOverride: false,
     light: false,
   });
 
   // Track the previous hardware state to detect transitions
   const hwInterruptRef = useRef<boolean>(false);
+  const hwInterrupt2Ref = useRef<boolean>(false);
 
   useEffect(() => {
     const mqttUrl = import.meta.env.VITE_MQTT_URL;
@@ -116,23 +119,35 @@ export const MqttProvider: React.FC<MqttProviderProps> = ({ children }) => {
         const stateStr = message.toString();
         const state = (stateStr === '1');
         
-        if (switchType === 'interrupt1') {
+        if (switchType === 'interrupt1' || switchType === 'interrupt2') {
           const hardwareState = (stateStr === '0'); // Reverse logic for interrupt
 
-          // If transitioning from ON to OFF (Override deactivated)
           let forceResetSoftware = false;
-          if (hwInterruptRef.current === true && hardwareState === false) {
-            forceResetSoftware = true;
+
+          if (switchType === 'interrupt1') {
+            // If transitioning from ON to OFF (Override deactivated)
+            if (hwInterruptRef.current === true && hardwareState === false) {
+              forceResetSoftware = true;
+            }
+            hwInterruptRef.current = hardwareState;
+          } else if (switchType === 'interrupt2') {
+            if (hwInterrupt2Ref.current === true && hardwareState === false) {
+              forceResetSoftware = true;
+            }
+            hwInterrupt2Ref.current = hardwareState;
+          }
+
+          if (forceResetSoftware) {
             // Also publish OFF to the software topic so Node-RED receives the reset
             if (mqttClient && mqttClient.connected) {
               mqttClient.publish('sapura/bilik1/switch/interrupt', '1', { retain: true }); // '1' is OFF for interrupt
             }
           }
-          hwInterruptRef.current = hardwareState;
 
           setSwitchStates(prev => ({
             ...prev,
-            interruptHardware: hardwareState,
+            ...(switchType === 'interrupt1' ? { interruptHardware: hardwareState } : {}),
+            ...(switchType === 'interrupt2' ? { interruptTempOverride: hardwareState } : {}),
             ...(forceResetSoftware ? { interruptSoftware: false } : {})
           }));
         } else {

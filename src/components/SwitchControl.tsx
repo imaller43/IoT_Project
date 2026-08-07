@@ -29,18 +29,18 @@ const SwitchControl: React.FC = () => {
         </div>
         <div className="switch-container">
           <span className="switch-label">INTERRUPT</span>
-          <label className={`toggle ${switchStates.interruptHardware ? 'disabled' : ''}`}>
+          <label className={`toggle ${switchStates.interruptHardware || switchStates.interruptTempOverride ? 'disabled' : ''}`}>
             <input
               type="checkbox"
-              checked={switchStates.interruptHardware || switchStates.interruptSoftware}
-              disabled={switchStates.interruptHardware}
+              checked={switchStates.interruptHardware || switchStates.interruptTempOverride || switchStates.interruptSoftware}
+              disabled={switchStates.interruptHardware || switchStates.interruptTempOverride}
               onChange={() => handleToggle('sapura/bilik1/switch/interrupt', switchStates.interruptSoftware)}
             />
             <span className="slider"></span>
           </label>
-          {switchStates.interruptHardware && (
+          {(switchStates.interruptHardware || switchStates.interruptTempOverride) && (
             <div style={{ color: '#ef4444', fontSize: '0.75rem', marginTop: '0.5rem', fontWeight: 600, textAlign: 'center' }}>
-              Override Activated
+              {switchStates.interruptTempOverride ? 'Override Activated : High Temperature' : 'Override Aktif'}
             </div>
           )}
         </div>
