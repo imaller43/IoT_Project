@@ -1,15 +1,12 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useMqtt } from '../context/MqttContext';
 
 const SwitchControl: React.FC = () => {
-  const { publishSwitch } = useMqtt();
-  const [switchFan, setSwitchFan] = useState(false);
-  const [switchInterrupt, setSwitchInterrupt] = useState(false);
-  const [switchLight, setSwitchLight] = useState(false);
+  const { publishSwitch, switchStates } = useMqtt();
 
-  const handleToggle = (topic: string, currentVal: boolean, setter: React.Dispatch<React.SetStateAction<boolean>>) => {
+  const handleToggle = (topic: string, currentVal: boolean) => {
     const newVal = !currentVal;
-    setter(newVal);
+    // We only publish. The state will update automatically when the MQTT broker sends the message back.
     publishSwitch(topic, newVal);
   };
 
@@ -24,8 +21,8 @@ const SwitchControl: React.FC = () => {
           <label className="toggle">
             <input
               type="checkbox"
-              checked={switchFan}
-              onChange={() => handleToggle('sapura/bilik1/switch/fan', switchFan, setSwitchFan)}
+              checked={switchStates.fan}
+              onChange={() => handleToggle('sapura/bilik1/switch/fan', switchStates.fan)}
             />
             <span className="slider"></span>
           </label>
@@ -35,8 +32,8 @@ const SwitchControl: React.FC = () => {
           <label className="toggle">
             <input
               type="checkbox"
-              checked={switchInterrupt}
-              onChange={() => handleToggle('sapura/bilik1/switch/interrupt', switchInterrupt, setSwitchInterrupt)}
+              checked={switchStates.interrupt}
+              onChange={() => handleToggle('sapura/bilik1/switch/interrupt', switchStates.interrupt)}
             />
             <span className="slider"></span>
           </label>
@@ -46,8 +43,8 @@ const SwitchControl: React.FC = () => {
           <label className="toggle">
             <input
               type="checkbox"
-              checked={switchLight}
-              onChange={() => handleToggle('sapura/bilik1/switch/light', switchLight, setSwitchLight)}
+              checked={switchStates.light}
+              onChange={() => handleToggle('sapura/bilik1/switch/light', switchStates.light)}
             />
             <span className="slider"></span>
           </label>

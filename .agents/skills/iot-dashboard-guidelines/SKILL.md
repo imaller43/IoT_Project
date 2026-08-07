@@ -7,7 +7,13 @@ description: Panduan wajib untuk UI, reka bentuk komponen, dan pantang larang da
 
 Kemahiran (*skill*) ini adalah buku peraturan khusus untuk projek ini. Sila patuhi arahan di bawah setiap kali menulis atau mengubah suai kod dalam ruang kerja ini.
 
-## 1. Tema & Warna (UI/UX)
+## 1. Asas Projek (Project Fundamentals)
+- **Framework Frontend**: React (dengan TypeScript) menggunakan Vite.
+- **Pangkalan Data (Backend)**: InfluxDB (Data Historik & Analisis Time-Series) & MQTT Broker (Data Masa Nyata).
+- **Perkakasan & Middleware**: Projek ini menggunakan **Raspberry Pi 4 Model B** yang bertindak bersama **Node-RED** sebagai middleware untuk mengawal dan memantau status GPIO (*switch state*).
+- **Pengesahan (Authentication)**: Clerk (Autentikasi selamat tanpa *backend server* peribadi).
+
+## 2. Tema & Warna (UI/UX)
 - Projek ini menggunakan sistem **Dark Mode** (lalai) dan **Soft Light Mode**.
 - **JANGAN** menggunakan warna statik/tegar (seperti `#000000`, `#ffffff` atau `rgba(...)`) di dalam fail `.tsx` (*inline styles*) melainkan terpaksa.
 - **WAJIB** menggunakan pembolehubah CSS yang telah didaftarkan dalam `index.css` (contoh: `var(--bg-color)`, `var(--panel-bg)`, `var(--text-primary)`).

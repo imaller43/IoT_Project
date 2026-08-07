@@ -7,10 +7,17 @@ export interface RoomData {
   lightDensity: number;
 }
 
+export interface SwitchStates {
+  fan: boolean;
+  interrupt: boolean;
+  light: boolean;
+}
+
 interface MqttContextType {
   client: MqttClient | null;
   isConnected: boolean;
   roomsData: Record<string, RoomData>;
+  switchStates: SwitchStates;
   publishSwitch: (topic: string, state: boolean) => void;
 }
 
@@ -39,6 +46,12 @@ export const MqttProvider: React.FC<MqttProviderProps> = ({ children }) => {
     'Bilik_3': { temperature: 0, humidity: 0, lightDensity: 0 },
   });
 
+  const [switchStates, setSwitchStates] = useState<SwitchStates>({
+    fan: false,
+    interrupt: false,
+    light: false,
+  });
+
   useEffect(() => {
     const mqttUrl = import.meta.env.VITE_MQTT_URL;
     const mqttUsername = import.meta.env.VITE_MQTT_USER;
@@ -58,6 +71,8 @@ export const MqttProvider: React.FC<MqttProviderProps> = ({ children }) => {
       mqttClient.subscribe('sapura/bilik1/data');
       mqttClient.subscribe('sapura/bilik2/data');
       mqttClient.subscribe('sapura/bilik3/data');
+      // Subscribe to switch states
+      mqttClient.subscribe('sapura/bilik1/switch/+');
     });
 
     mqttClient.on('error', (err) => {
@@ -91,6 +106,18 @@ export const MqttProvider: React.FC<MqttProviderProps> = ({ children }) => {
         } catch (e) {
           console.error("Failed to parse MQTT JSON payload", e);
         }
+      } else if (topic.startsWith('sapura/bilik1/switch/')) {
+        const switchType = topic.split('/').pop();
+        const stateStr = message.toString();
+        // Determine state (interrupt might be inverted depending on hardware, but generally '1' is true, '0' is false)
+        const state = (stateStr === '1');
+        
+        setSwitchStates(prev => ({
+          ...prev,
+          ...(switchType === 'fan' ? { fan: state } : {}),
+          ...(switchType === 'interrupt' ? { interrupt: stateStr === '0' } : {}), // Reverse logic for interrupt as per original code
+          ...(switchType === 'light' ? { light: state } : {})
+        }));
       }
     });
 
@@ -102,7 +129,7 @@ export const MqttProvider: React.FC<MqttProviderProps> = ({ children }) => {
   const publishSwitch = (topic: string, state: boolean) => {
     if (client && client.connected) {
       const payload = topic.includes('interrupt') ? (state ? '0' : '1') : (state ? '1' : '0');
-      client.publish(topic, payload);
+      client.publish(topic, payload, { retain: true });
     }
   };
 
@@ -111,6 +138,7 @@ export const MqttProvider: React.FC<MqttProviderProps> = ({ children }) => {
       client,
       isConnected,
       roomsData,
+      switchStates,
       publishSwitch
     }}>
       {children}
