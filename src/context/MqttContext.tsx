@@ -109,7 +109,11 @@ export const MqttProvider: React.FC<MqttProviderProps> = ({ children }) => {
       } else if (topic.startsWith('sapura/bilik1/switch/')) {
         const switchType = topic.split('/').pop();
         const stateStr = message.toString();
-        // Determine state (interrupt might be inverted depending on hardware, but generally '1' is true, '0' is false)
+        
+        // Ignore the outgoing 'interrupt' topic to avoid self-feedback loop.
+        // We solely rely on 'interrupt1' published by Node-RED for the actual physical state.
+        if (switchType === 'interrupt') return;
+
         const state = (stateStr === '1');
         
         setSwitchStates(prev => ({
@@ -128,7 +132,7 @@ export const MqttProvider: React.FC<MqttProviderProps> = ({ children }) => {
 
   const publishSwitch = (topic: string, state: boolean) => {
     if (client && client.connected) {
-      const payload = topic.includes('interrupt1') ? (state ? '0' : '1') : (state ? '1' : '0');
+      const payload = topic.includes('interrupt') ? (state ? '0' : '1') : (state ? '1' : '0');
       client.publish(topic, payload, { retain: true });
     }
   };
