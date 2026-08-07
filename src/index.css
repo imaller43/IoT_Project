@@ -279,6 +279,15 @@ tr:hover {
   height: 0;
 }
 
+.toggle.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.toggle.disabled .slider {
+  cursor: not-allowed;
+}
+
 .slider {
   position: absolute;
   cursor: pointer;

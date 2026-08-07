@@ -29,14 +29,20 @@ const SwitchControl: React.FC = () => {
         </div>
         <div className="switch-container">
           <span className="switch-label">INTERRUPT</span>
-          <label className="toggle">
+          <label className={`toggle ${switchStates.interruptHardware ? 'disabled' : ''}`}>
             <input
               type="checkbox"
-              checked={switchStates.interrupt}
-              onChange={() => handleToggle('sapura/bilik1/switch/interrupt', switchStates.interrupt)}
+              checked={switchStates.interruptHardware || switchStates.interruptSoftware}
+              disabled={switchStates.interruptHardware}
+              onChange={() => handleToggle('sapura/bilik1/switch/interrupt', switchStates.interruptSoftware)}
             />
             <span className="slider"></span>
           </label>
+          {switchStates.interruptHardware && (
+            <div style={{ color: '#ef4444', fontSize: '0.75rem', marginTop: '0.5rem', fontWeight: 600, textAlign: 'center' }}>
+              Override Aktif
+            </div>
+          )}
         </div>
         <div className="switch-container">
           <span className="switch-label">LIGHT</span>

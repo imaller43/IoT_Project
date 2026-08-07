@@ -9,7 +9,8 @@ export interface RoomData {
 
 export interface SwitchStates {
   fan: boolean;
-  interrupt: boolean;
+  interruptSoftware: boolean;
+  interruptHardware: boolean;
   light: boolean;
 }
 
@@ -48,7 +49,8 @@ export const MqttProvider: React.FC<MqttProviderProps> = ({ children }) => {
 
   const [switchStates, setSwitchStates] = useState<SwitchStates>({
     fan: false,
-    interrupt: false,
+    interruptSoftware: false,
+    interruptHardware: false,
     light: false,
   });
 
@@ -109,17 +111,13 @@ export const MqttProvider: React.FC<MqttProviderProps> = ({ children }) => {
       } else if (topic.startsWith('sapura/bilik1/switch/')) {
         const switchType = topic.split('/').pop();
         const stateStr = message.toString();
-        
-        // Ignore the outgoing 'interrupt' topic to avoid self-feedback loop.
-        // We solely rely on 'interrupt1' published by Node-RED for the actual physical state.
-        if (switchType === 'interrupt') return;
-
         const state = (stateStr === '1');
         
         setSwitchStates(prev => ({
           ...prev,
           ...(switchType === 'fan' ? { fan: state } : {}),
-          ...(switchType === 'interrupt1' ? { interrupt: stateStr === '0' } : {}), // Reverse logic for interrupt as per original code
+          ...(switchType === 'interrupt' ? { interruptSoftware: stateStr === '0' } : {}),
+          ...(switchType === 'interrupt1' ? { interruptHardware: stateStr === '0' } : {}), // Reverse logic for interrupt as per original code
           ...(switchType === 'light' ? { light: state } : {})
         }));
       }
