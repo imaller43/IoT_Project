@@ -46,7 +46,7 @@ function App({ theme, setTheme }: AppProps) {
   const [currentTime, setCurrentTime] = useState(new Date());
 
   useEffect(() => {
-    document.title = "Dashboard";
+    document.title = "IoT Dashboard";
     return () => {
       document.title = "Log In to Dashboard"; // Reset when unmounted (logged out)
     };
