@@ -46,7 +46,17 @@ Kemahiran (*skill*) ini adalah buku peraturan khusus untuk projek ini. Sila patu
 - Pastikan elemen `header` atau bekas utama (`container`) sentiasa menggunakan `width: 100%` supaya ia tidak mengecut ke sebelah kiri skrin ketika skrol mendatar (*horizontal overflow*).
 - Kekalkan reka bentuk komponen agar sentiasa boleh diguna semula (*reusable*).
 
-## 4. Pantang Larang Projek ⚠️
+## 5. MQTT & Logik Suis Pintar (Hardware Override)
+- **Topik Pengasingan (Decoupled Topics)**: Untuk mengelakkan gelung suap balik (*feedback loop*) dan menyokong pengesahan perkakasan, kawalan suis dan maklum balas status diasingkan.
+  - Dashboard *publish* (menghantar) ke: `sapura/bilik1/switch/interrupt`
+  - Node-RED / Perkakasan *publish* status fizikal sebenar ke: `sapura/bilik1/switch/interrupt1`
+- **Hardware Override (Pintas Perkakasan)**:
+  - Jika suis fizikal ditekan (ON), Node-RED akan menghantar status aktif ke `interrupt1`.
+  - Dashboard akan mengesan status ini, lalu menghidupkan butang UI dan menjadikannya **TIDAK AKTIF (disabled)** dengan amaran "Override Aktif". 
+  - Selagi suis fizikal ON, aplikasi web tidak dapat mengawal lampu tersebut.
+  - Apabila suis fizikal dilepaskan (OFF), UI akan menetapkan semula (*reset*) kedudukan suis perisian kepada OFF secara automatik, dan menyegerakkan kembali status tersebut ke Node-RED.
+
+## 6. Pantang Larang Projek ⚠️
 - **Dilarang** membuang atau mendedahkan konfigurasi di dalam `VITE_CLERK_PUBLISHABLE_KEY`.
 - Sentiasa asingkan tetapan kepada `.env.development` (untuk kunci ujian/test) dan `.env.production` (untuk kunci sebenar/live).
 - **Hanya ubah suai fail yang diminta**. Jangan sentuh logik pangkalan data, MQTT, atau komponen lain sekiranya pengguna hanya meminta suntingan antara muka (UI).
