@@ -7,17 +7,23 @@ type UseIdleTimeoutProps = {
 
 export const useIdleTimeout = ({ onIdle, idleTime = 15 * 60 * 1000 }: UseIdleTimeoutProps) => {
   const timeoutRef = useRef<number | NodeJS.Timeout | null>(null);
+  const onIdleRef = useRef(onIdle);
 
-  const resetTimer = () => {
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current as NodeJS.Timeout);
-    }
-    timeoutRef.current = setTimeout(() => {
-      onIdle();
-    }, idleTime);
-  };
+  // Update ref to latest callback if it changes, without triggering useEffect
+  useEffect(() => {
+    onIdleRef.current = onIdle;
+  }, [onIdle]);
 
   useEffect(() => {
+    const resetTimer = () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current as NodeJS.Timeout);
+      }
+      timeoutRef.current = setTimeout(() => {
+        onIdleRef.current();
+      }, idleTime);
+    };
+
     // Events to monitor for user activity
     const events = ['mousemove', 'keydown', 'wheel', 'scroll', 'touchstart'];
 
@@ -42,5 +48,5 @@ export const useIdleTimeout = ({ onIdle, idleTime = 15 * 60 * 1000 }: UseIdleTim
         window.removeEventListener(event, handleActivity);
       });
     };
-  }, [onIdle, idleTime]);
+  }, [idleTime]); // Notice onIdle is no longer a dependency here!
 };
