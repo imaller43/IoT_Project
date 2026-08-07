@@ -64,6 +64,7 @@ const getAggregateWindow = (timeRange: string) => {
     case '-6h': return '5m';
     case '-12h': return '10m';
     case '-24h': return '20m';
+    case '-3d': return '1h';
     case '-7d': return '2h';
     default: return '10m';
   }

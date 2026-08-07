@@ -21,7 +21,19 @@ Kemahiran (*skill*) ini adalah buku peraturan khusus untuk projek ini. Sila patu
 - Kotak log masuk juga **wajib** diletakkan bayang-bayang di belakangnya (*box-shadow*) melalui panggil CSS variable `var(--login-box-shadow)` dalam tetapan `appearance`.
 - **Wajib** meletakkan efek *radial-gradient* bercahaya (aura) di belakang kotak log masuk melalui pembolehubah `var(--login-aura)` supaya antaramuka nampak lebih premium dan tidak tenggelam.
 
-## 3. Pembangunan Komponen & Widget
+## 3. Prestasi Data (Data Performance) & Downsampling
+- Pangkalan data InfluxDB boleh memulangkan puluhan ribu baris data jika julat masa terlalu panjang, yang akan menyebabkan pelayar (browser) *hang*.
+- **Wajib menggunakan `aggregateWindow`** dalam pertanyaan Flux untuk graf sejarah (`fetchHistoricalData`) berdasarkan julat masa:
+  - `-30m` & `-1h` = `1m`
+  - `-3h` = `2m`
+  - `-6h` = `5m`
+  - `-12h` = `10m`
+  - `-24h` = `20m`
+  - `-3d` = `1h`
+  - `-7d` = `2h`
+- Peraturan ini bertujuan memastikan data graf sentiasa berada di bawah 200 titik (data points) pada satu-satu masa.
+
+## 4. Pembangunan Komponen & Widget
 - Pembangunan widget carta dan jadual perlu responsif secara automatik kepada perubahan tema (Light/Dark).
 - **Responsif Mobile**: Wajib memastikan susun atur grid (`top-grid`, `middle-grid`, `bottom-grid`, `switch-grid`) responsif terhadap saiz skrin. Jangan *hardcode* `grid-template-columns: repeat(3, 1fr)` tanpa `media queries` kerana ia akan memecahkan susun atur pada peranti mudah alih (walaupun dalam mod desktop/tablet). 
 - Gunakan `@media (max-width: 1024px)` untuk menukar grid kepada `1fr` supaya ia tersusun menegak (stacked) untuk paparan kecil.

@@ -14,6 +14,7 @@ const TIME_RANGES = [
   { label: 'Past 6h', value: '-6h' },
   { label: 'Past 12h', value: '-12h' },
   { label: 'Past 24h', value: '-24h' },
+  { label: 'Past 3d', value: '-3d' },
   { label: 'Past 7d', value: '-7d' }
 ];
 
