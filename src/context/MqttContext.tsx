@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useEffect, useState, ReactNode, useRef } from 'react';
 import mqtt, { MqttClient } from 'mqtt';
 
 export interface RoomData {
@@ -53,6 +53,9 @@ export const MqttProvider: React.FC<MqttProviderProps> = ({ children }) => {
     interruptHardware: false,
     light: false,
   });
+
+  // Track the previous hardware state to detect transitions
+  const hwInterruptRef = useRef<boolean>(false);
 
   useEffect(() => {
     const mqttUrl = import.meta.env.VITE_MQTT_URL;
@@ -113,13 +116,33 @@ export const MqttProvider: React.FC<MqttProviderProps> = ({ children }) => {
         const stateStr = message.toString();
         const state = (stateStr === '1');
         
-        setSwitchStates(prev => ({
-          ...prev,
-          ...(switchType === 'fan' ? { fan: state } : {}),
-          ...(switchType === 'interrupt' ? { interruptSoftware: stateStr === '0' } : {}),
-          ...(switchType === 'interrupt1' ? { interruptHardware: stateStr === '0' } : {}), // Reverse logic for interrupt as per original code
-          ...(switchType === 'light' ? { light: state } : {})
-        }));
+        if (switchType === 'interrupt1') {
+          const hardwareState = (stateStr === '0'); // Reverse logic for interrupt
+
+          // If transitioning from ON to OFF (Override deactivated)
+          let forceResetSoftware = false;
+          if (hwInterruptRef.current === true && hardwareState === false) {
+            forceResetSoftware = true;
+            // Also publish OFF to the software topic so Node-RED receives the reset
+            if (mqttClient && mqttClient.connected) {
+              mqttClient.publish('sapura/bilik1/switch/interrupt', '1', { retain: true }); // '1' is OFF for interrupt
+            }
+          }
+          hwInterruptRef.current = hardwareState;
+
+          setSwitchStates(prev => ({
+            ...prev,
+            interruptHardware: hardwareState,
+            ...(forceResetSoftware ? { interruptSoftware: false } : {})
+          }));
+        } else {
+          setSwitchStates(prev => ({
+            ...prev,
+            ...(switchType === 'fan' ? { fan: state } : {}),
+            ...(switchType === 'interrupt' ? { interruptSoftware: stateStr === '0' } : {}),
+            ...(switchType === 'light' ? { light: state } : {})
+          }));
+        }
       }
     });
 

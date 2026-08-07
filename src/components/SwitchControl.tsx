@@ -40,7 +40,7 @@ const SwitchControl: React.FC = () => {
           </label>
           {switchStates.interruptHardware && (
             <div style={{ color: '#ef4444', fontSize: '0.75rem', marginTop: '0.5rem', fontWeight: 600, textAlign: 'center' }}>
-              Override Aktif
+              Override Activated
             </div>
           )}
         </div>
