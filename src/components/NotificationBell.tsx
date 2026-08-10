@@ -36,6 +36,9 @@ export const NotificationBell: React.FC = () => {
     }
   }, [isSupported]);
 
+  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || window.innerWidth <= 768;
+  const [showMobileModal, setShowMobileModal] = useState(false);
+
   // Publish token to MQTT
   useEffect(() => {
     if (fcmToken && client && isConnected) {
@@ -44,8 +47,13 @@ export const NotificationBell: React.FC = () => {
   }, [fcmToken, client, isConnected]);
 
   const toggleNotification = async () => {
+    if (isMobile) {
+      setShowMobileModal(true);
+      return;
+    }
+
     if (!isSupported) {
-      alert("Pelayar (browser) ini tidak menyokong notifikasi Web Push.");
+      alert("Pelayar (browser) ini tidak menyokong notifikasi Web Push. (Sila pastikan anda menggunakan HTTPS)");
       return;
     }
 
@@ -92,30 +100,103 @@ export const NotificationBell: React.FC = () => {
     }
   };
 
-  if (!isSupported) {
-    return null;
+  if (!isSupported && !isMobile) {
+    return null; // Don't render on unsupported desktop
   }
 
-  const isRegistered = !!fcmToken;
+  const isRegistered = isMobile ? false : !!fcmToken;
 
   return (
-    <button
-      onClick={toggleNotification}
-      disabled={isProcessing}
-      title={isRegistered ? "Matikan Notifikasi Suhu" : "Aktifkan Notifikasi Suhu"}
-      style={{
-        background: 'transparent',
-        border: 'none',
-        cursor: isProcessing ? 'wait' : 'pointer',
-        color: isRegistered ? 'var(--primary-color)' : 'var(--text-secondary)',
-        display: 'flex',
-        alignItems: 'center',
-        padding: '8px',
-        opacity: isProcessing ? 0.5 : 1,
-        transition: 'color 0.2s ease'
-      }}
-    >
-      {isRegistered ? <Bell size={20} /> : <BellOff size={20} />}
-    </button>
+    <>
+      <button
+        onClick={toggleNotification}
+        disabled={isProcessing}
+        title={isMobile ? "Notifikasi Telegram" : (isRegistered ? "Matikan Notifikasi Suhu" : "Aktifkan Notifikasi Suhu")}
+        style={{
+          background: 'transparent',
+          border: 'none',
+          cursor: isProcessing ? 'wait' : 'pointer',
+          color: isMobile ? 'var(--text-primary)' : (isRegistered ? 'var(--primary-color)' : 'var(--text-secondary)'),
+          display: 'flex',
+          alignItems: 'center',
+          padding: '8px',
+          opacity: isProcessing ? 0.5 : 1,
+          transition: 'color 0.2s ease'
+        }}
+      >
+        {isRegistered || isMobile ? <Bell size={20} /> : <BellOff size={20} />}
+      </button>
+
+      {/* Mobile Telegram Modal */}
+      {showMobileModal && (
+        <div style={{
+          position: 'fixed',
+          top: 0, left: 0, right: 0, bottom: 0,
+          backgroundColor: 'rgba(0,0,0,0.6)',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          zIndex: 9999,
+          backdropFilter: 'blur(4px)'
+        }}>
+          <div style={{
+            background: 'var(--panel-bg)',
+            padding: '2rem',
+            borderRadius: '16px',
+            maxWidth: '90%',
+            width: '400px',
+            textAlign: 'center',
+            border: '1px solid var(--panel-border)',
+            boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)'
+          }}>
+            <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '1rem' }}>
+              <div style={{ background: 'rgba(34, 158, 217, 0.1)', padding: '1rem', borderRadius: '50%' }}>
+                <Bell size={32} color="#229ED9" />
+              </div>
+            </div>
+            <h3 style={{ marginTop: 0, marginBottom: '0.5rem', color: 'var(--text-primary)', fontSize: '1.25rem' }}>
+              Notifikasi Telefon Pintar 📱
+            </h3>
+            <p style={{ color: 'var(--text-secondary)', marginBottom: '1.5rem', lineHeight: '1.5' }}>
+              Untuk telefon pintar, kami menggunakan <strong>Telegram Bot</strong> bagi memastikan notifikasi suhu tinggi dihantar dengan lebih pantas dan stabil berbanding Web Push biasa.
+            </p>
+            <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center' }}>
+              <button 
+                onClick={() => setShowMobileModal(false)}
+                style={{
+                  padding: '0.75rem 1.5rem',
+                  borderRadius: '8px',
+                  border: '1px solid var(--panel-border)',
+                  background: 'transparent',
+                  color: 'var(--text-primary)',
+                  cursor: 'pointer',
+                  fontWeight: 500
+                }}
+              >
+                Tutup
+              </button>
+              <a 
+                href="https://t.me/GANTIKAN_DENGAN_USERNAME_BOT_AWAK" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                style={{
+                  padding: '0.75rem 1.5rem',
+                  borderRadius: '8px',
+                  border: 'none',
+                  background: '#229ED9',
+                  color: 'white',
+                  textDecoration: 'none',
+                  fontWeight: 'bold',
+                  display: 'inline-block',
+                  cursor: 'pointer'
+                }}
+              >
+                Buka Telegram
+              </a>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 };
