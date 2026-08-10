@@ -6,6 +6,7 @@ import { useIdleTimeout } from './hooks/useIdleTimeout';
 
 // Components
 import RoomDashboard from './components/RoomDashboard';
+import { NotificationBell } from './components/NotificationBell';
 
 const TIME_RANGES = [
   { label: 'Past 30m', value: '-30m' },
@@ -102,6 +103,7 @@ function App({ theme, setTheme }: AppProps) {
           </div>
 
           <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+            <NotificationBell />
             <div className="custom-dropdown-container">
               <button
                 className={`custom-dropdown-button ${isDropdownOpen ? 'open' : ''}`}
