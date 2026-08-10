@@ -39,7 +39,7 @@ export const NotificationBell: React.FC = () => {
   // Publish token to MQTT
   useEffect(() => {
     if (fcmToken && client && isConnected) {
-      client.publish('sapura/fcm/register', JSON.stringify({ token: fcmToken }));
+      client.publish('sapura/fcm/register', fcmToken, { retain: false });
     }
   }, [fcmToken, client, isConnected]);
 
@@ -62,11 +62,12 @@ export const NotificationBell: React.FC = () => {
         // TURN OFF
         const deleted = await deleteToken(messaging);
         if (deleted) {
+          const oldToken = fcmToken;
           setFcmToken(null);
           localStorage.setItem('wants_notifications', 'false');
           // Tell Node-RED to unregister
           if (client && isConnected) {
-            client.publish('sapura/fcm/unregister', JSON.stringify({ token: fcmToken }));
+            client.publish('sapura/fcm/unregister', oldToken, { retain: false });
           }
         }
       } else {
