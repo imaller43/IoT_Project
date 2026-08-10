@@ -17,8 +17,17 @@ messaging.onBackgroundMessage((payload) => {
   const notificationTitle = payload.notification.title;
   const notificationOptions = {
     body: payload.notification.body,
-    icon: '/favicon.png'
+    icon: '/favicon.png',
+    requireInteraction: false // Memastikan OS tidak memaksa noti kekal di skrin
   };
 
-  self.registration.showNotification(notificationTitle, notificationOptions);
+  // Paparkan notifikasi
+  self.registration.showNotification(notificationTitle, notificationOptions).then(() => {
+    // Paksa notifikasi ditutup selepas 3.5 saat (3500ms)
+    setTimeout(() => {
+      self.registration.getNotifications().then(notifications => {
+        notifications.forEach(notification => notification.close());
+      });
+    }, 3500);
+  });
 });
