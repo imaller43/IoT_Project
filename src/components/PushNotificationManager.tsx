@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { messaging, getToken, VAPID_KEY } from '../firebase';
+import { getMessagingInstance, getToken, VAPID_KEY } from '../firebase';
 import { useMqtt } from '../context/MqttContext';
 import { Bell, BellOff, BellRing } from 'lucide-react';
 
@@ -41,6 +41,7 @@ export const PushNotificationManager: React.FC = () => {
       const permissionResult = await Notification.requestPermission();
       setPermission(permissionResult);
       if (permissionResult === 'granted') {
+        const messaging = await getMessagingInstance();
         if (!messaging) {
           console.error('Messaging is not supported or not initialized.');
           return;

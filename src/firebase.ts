@@ -13,14 +13,13 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
-let messaging: any = null;
-isSupported().then((supported) => {
+export const getMessagingInstance = async () => {
+  const supported = await isSupported();
   if (supported) {
-    messaging = getMessaging(app);
+    return getMessaging(app);
   }
-});
-
-export { messaging };
+  return null;
+};
 
 export const VAPID_KEY = import.meta.env.VITE_FIREBASE_VAPID_KEY;
 
