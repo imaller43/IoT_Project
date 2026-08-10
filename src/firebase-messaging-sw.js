@@ -1,13 +1,17 @@
 importScripts('https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js');
 importScripts('https://www.gstatic.com/firebasejs/10.8.0/firebase-messaging-compat.js');
 
+// To let workbox inject its manifest
+import { precacheAndRoute } from 'workbox-precaching';
+precacheAndRoute(self.__WB_MANIFEST || []);
+
 firebase.initializeApp({
-  apiKey: "AIzaSyAFB9FVcOUWx2X5SXyIxQJ_eqKecbSQ7Vs",
-  authDomain: "iotdashboard-45e86.firebaseapp.com",
-  projectId: "iotdashboard-45e86",
-  storageBucket: "iotdashboard-45e86.firebasestorage.app",
-  messagingSenderId: "72552641629",
-  appId: "1:72552641629:web:2f83baa0642db987c749b4"
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID
 });
 
 const messaging = firebase.messaging();

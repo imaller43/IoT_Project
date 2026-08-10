@@ -60,7 +60,8 @@ Kemahiran (*skill*) ini adalah buku peraturan khusus untuk projek ini. Sila patu
   - Apabila override dilepaskan (OFF / Suhu kembali normal), UI akan menetapkan semula (*reset*) kedudukan suis perisian kepada OFF secara automatik, dan menyegerakkan kembali status tersebut ke Node-RED.
 
 ## 6. Pantang Larang Projek ⚠️
+- **DILARANG SAMA SEKALI** meletakkan (*hardcode*) sebarang Kunci API (API Key), Kata Laluan, Token, atau Kredensial di dalam fail kod (.ts/.js/.tsx) yang ditolak (push) ke GitHub. **WAJIB** menggunakan fail `.env` (contoh: `import.meta.env.VITE_API_KEY`).
 - **Dilarang** membuang atau mendedahkan konfigurasi di dalam `VITE_CLERK_PUBLISHABLE_KEY`.
-- Sentiasa asingkan tetapan kepada `.env.development` (untuk kunci ujian/test) dan `.env.production` (untuk kunci sebenar/live).
+- Sentiasa asingkan tetapan kepada `.env.development` (untuk kunci ujian/test) dan `.env.production` (untuk kunci sebenar/live). Fail `.env` mesti disenaraikan dalam `.gitignore`.
 - **Hanya ubah suai fail yang diminta**. Jangan sentuh logik pangkalan data, MQTT, atau komponen lain sekiranya pengguna hanya meminta suntingan antara muka (UI).
 - **Peraturan Pengekodan (Git):** Selepas setiap perubahan selesai, AI **wajib** menolak (commit & push) kod ke GitHub menggunakan: `git add . ; git commit -m "..." ; git push`.
