@@ -5,14 +5,17 @@ import { Bell, BellOff, BellRing } from 'lucide-react';
 
 export const PushNotificationManager: React.FC = () => {
   const { client, isConnected } = useMqtt();
-  const [permission, setPermission] = useState<NotificationPermission>(Notification.permission);
+  const isSupported = 'Notification' in window;
+  const [permission, setPermission] = useState<NotificationPermission>(
+    isSupported ? Notification.permission : 'denied'
+  );
   const [fcmToken, setFcmToken] = useState<string | null>(null);
   const [isRequesting, setIsRequesting] = useState(false);
   const [isRegistered, setIsRegistered] = useState(false);
 
   useEffect(() => {
     // If permission is already granted, automatically fetch the token and register
-    if (Notification.permission === 'granted' && !fcmToken) {
+    if (isSupported && Notification.permission === 'granted' && !fcmToken) {
       requestPermission();
     }
   }, []);
@@ -51,6 +54,20 @@ export const PushNotificationManager: React.FC = () => {
       setIsRequesting(false);
     }
   };
+
+  if (!isSupported) {
+    return (
+      <div className="panel" style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', padding: '1rem', marginTop: '1rem' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <BellOff size={20} color="gray" />
+          <h3 style={{ margin: 0, fontSize: '1rem', color: 'var(--text-primary)' }}>Notifikasi Suhu Tinggi</h3>
+        </div>
+        <span style={{ fontSize: '0.8rem', color: '#ef4444' }}>
+          ⚠️ Pelayar (browser) ini tidak menyokong notifikasi, atau anda tidak mengakses dari sambungan yang selamat (HTTPS).
+        </span>
+      </div>
+    );
+  }
 
   return (
     <div className="panel" style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', padding: '1rem', marginTop: '1rem' }}>
