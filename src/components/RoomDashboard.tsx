@@ -5,7 +5,7 @@ import GaugeWidget from './GaugeWidget';
 import DataTableWidget from './DataTableWidget';
 import ChartWidget from './ChartWidget';
 import SwitchControl from './SwitchControl';
-// Removed unused lucide-react imports
+import { PushNotificationManager } from './PushNotificationManager';
 
 interface RoomDashboardProps {
   roomId: string;
@@ -89,11 +89,14 @@ const RoomDashboard: React.FC<RoomDashboardProps> = ({
 
   return (
     <>
-      {hasSwitches && (
-        <div className="switches-container">
-          <SwitchControl />
-        </div>
-      )}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+        {hasSwitches && (
+          <div className="switches-container">
+            <SwitchControl />
+          </div>
+        )}
+        <PushNotificationManager />
+      </div>
 
       {/* Top Grid: Gauges */}
       <div className="top-grid">
