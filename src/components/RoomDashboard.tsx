@@ -5,7 +5,6 @@ import GaugeWidget from './GaugeWidget';
 import DataTableWidget from './DataTableWidget';
 import ChartWidget from './ChartWidget';
 import SwitchControl from './SwitchControl';
-import { PushNotificationManager } from './PushNotificationManager';
 
 interface RoomDashboardProps {
   roomId: string;
@@ -95,7 +94,6 @@ const RoomDashboard: React.FC<RoomDashboardProps> = ({
             <SwitchControl />
           </div>
         )}
-        <PushNotificationManager />
       </div>
 
       {/* Top Grid: Gauges */}
