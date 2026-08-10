@@ -1,19 +1,36 @@
 import React, { useState, useEffect } from 'react';
 import { messaging, getToken, VAPID_KEY } from '../firebase';
-import { Bell, BellOff, Copy, Check } from 'lucide-react';
+import { useMqtt } from '../context/MqttContext';
+import { Bell, BellOff, BellRing } from 'lucide-react';
 
 export const PushNotificationManager: React.FC = () => {
+  const { client, isConnected } = useMqtt();
   const [permission, setPermission] = useState<NotificationPermission>(Notification.permission);
   const [fcmToken, setFcmToken] = useState<string | null>(null);
-  const [copied, setCopied] = useState(false);
   const [isRequesting, setIsRequesting] = useState(false);
+  const [isRegistered, setIsRegistered] = useState(false);
 
   useEffect(() => {
-    // If permission is already granted, we can automatically fetch the token
+    // If permission is already granted, automatically fetch the token and register
     if (Notification.permission === 'granted' && !fcmToken) {
       requestPermission();
     }
   }, []);
+
+  // When we have both token and MQTT connection, auto-register
+  useEffect(() => {
+    if (fcmToken && client && isConnected) {
+      registerToken(fcmToken);
+    }
+  }, [fcmToken, client, isConnected]);
+
+  const registerToken = (token: string) => {
+    if (client && client.connected) {
+      // Hantar FCM Token ke Node-RED melalui MQTT
+      client.publish('sapura/fcm/register', token, { retain: false });
+      setIsRegistered(true);
+    }
+  };
 
   const requestPermission = async () => {
     setIsRequesting(true);
@@ -25,7 +42,7 @@ export const PushNotificationManager: React.FC = () => {
         if (token) {
           setFcmToken(token);
         } else {
-          console.error('No registration token available. Request permission to generate one.');
+          console.error('No registration token available.');
         }
       }
     } catch (err) {
@@ -35,24 +52,22 @@ export const PushNotificationManager: React.FC = () => {
     }
   };
 
-  const handleCopy = () => {
-    if (fcmToken) {
-      navigator.clipboard.writeText(fcmToken);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    }
-  };
-
   return (
-    <div className="panel" style={{ display: 'flex', flexDirection: 'column', gap: '1rem', padding: '1rem', marginTop: '1rem' }}>
+    <div className="panel" style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', padding: '1rem', marginTop: '1rem' }}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-          {permission === 'granted' ? <Bell size={20} color="var(--primary-color)" /> : <BellOff size={20} color="gray" />}
+          {isRegistered ? (
+            <BellRing size={20} color="var(--primary-color)" />
+          ) : permission === 'granted' ? (
+            <Bell size={20} color="var(--primary-color)" />
+          ) : (
+            <BellOff size={20} color="gray" />
+          )}
           <h3 style={{ margin: 0, fontSize: '1rem', color: 'var(--text-primary)' }}>Notifikasi Suhu Tinggi</h3>
         </div>
         {permission !== 'granted' && (
-          <button 
-            onClick={requestPermission} 
+          <button
+            onClick={requestPermission}
             disabled={isRequesting}
             style={{ padding: '0.5rem 1rem', background: 'var(--primary-color)', color: '#fff', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold' }}
           >
@@ -61,26 +76,22 @@ export const PushNotificationManager: React.FC = () => {
         )}
       </div>
 
-      {permission === 'granted' && fcmToken && (
-        <div style={{ background: 'var(--bg-color)', padding: '0.75rem', borderRadius: '4px', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-          <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>FCM Token (Untuk digunakan di Node-RED):</span>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <code style={{ flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', fontSize: '0.75rem', color: 'var(--text-primary)', background: 'var(--panel-bg)', padding: '0.25rem' }}>
-              {fcmToken}
-            </code>
-            <button 
-              onClick={handleCopy}
-              style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: copied ? 'green' : 'var(--text-secondary)' }}
-              title="Copy Token"
-            >
-              {copied ? <Check size={18} /> : <Copy size={18} />}
-            </button>
-          </div>
-        </div>
+      {isRegistered && (
+        <span style={{ fontSize: '0.8rem', color: '#22c55e' }}>
+          ✅ Notifikasi aktif. Anda akan dimaklumkan jika suhu melebihi 27°C.
+        </span>
+      )}
+
+      {permission === 'granted' && !isRegistered && (
+        <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
+          Sedang mendaftar peranti anda...
+        </span>
       )}
 
       {permission === 'denied' && (
-        <span style={{ fontSize: '0.8rem', color: '#ef4444' }}>Anda telah menghalang (block) notifikasi. Sila ubah tetapan pelayar (browser) anda.</span>
+        <span style={{ fontSize: '0.8rem', color: '#ef4444' }}>
+          Anda telah menghalang (block) notifikasi. Sila ubah tetapan pelayar (browser) anda.
+        </span>
       )}
     </div>
   );
