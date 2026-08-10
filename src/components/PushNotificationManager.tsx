@@ -41,6 +41,10 @@ export const PushNotificationManager: React.FC = () => {
       const permissionResult = await Notification.requestPermission();
       setPermission(permissionResult);
       if (permissionResult === 'granted') {
+        if (!messaging) {
+          console.error('Messaging is not supported or not initialized.');
+          return;
+        }
         const token = await getToken(messaging, { vapidKey: VAPID_KEY });
         if (token) {
           setFcmToken(token);
