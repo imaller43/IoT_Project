@@ -7,6 +7,12 @@ import { dark } from '@clerk/themes'
 import { BrowserRouter, Routes, Route, useNavigate, Navigate } from 'react-router-dom'
 import { Activity, Sun, Moon } from 'lucide-react'
 import { useState, useEffect } from 'react'
+import { registerSW } from 'virtual:pwa-register'
+
+if ('serviceWorker' in navigator) {
+  // Initializes the Vite PWA dev server middleware
+  registerSW({ immediate: true })
+}
 
 const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY
 
