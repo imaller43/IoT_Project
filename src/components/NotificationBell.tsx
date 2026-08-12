@@ -36,7 +36,7 @@ export const NotificationBell: React.FC = () => {
     }
   }, [isSupported]);
 
-  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || window.innerWidth <= 768;
+  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
   const [showMobileModal, setShowMobileModal] = useState(false);
 
   // Publish token to MQTT
