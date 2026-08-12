@@ -24,7 +24,16 @@ export const NotificationBell: React.FC = () => {
           if (messaging) {
             const wantsNotifications = localStorage.getItem('wants_notifications') !== 'false';
             if (wantsNotifications) {
-              const token = await getToken(messaging, { vapidKey: VAPID_KEY });
+              let registration = await navigator.serviceWorker.getRegistration('/firebase-messaging-sw.js');
+              if (!registration) {
+                registration = await navigator.serviceWorker.register('/firebase-messaging-sw.js', {
+                  type: import.meta.env.DEV ? 'module' : 'classic'
+                });
+              }
+              const token = await getToken(messaging, { 
+                vapidKey: VAPID_KEY,
+                serviceWorkerRegistration: registration
+              });
               if (token) setFcmToken(token);
             }
           }
@@ -84,7 +93,16 @@ export const NotificationBell: React.FC = () => {
         setPermission(permissionResult);
         
         if (permissionResult === 'granted') {
-          const token = await getToken(messaging, { vapidKey: VAPID_KEY });
+          let registration = await navigator.serviceWorker.getRegistration('/firebase-messaging-sw.js');
+          if (!registration) {
+            registration = await navigator.serviceWorker.register('/firebase-messaging-sw.js', {
+              type: import.meta.env.DEV ? 'module' : 'classic'
+            });
+          }
+          const token = await getToken(messaging, { 
+            vapidKey: VAPID_KEY,
+            serviceWorkerRegistration: registration
+          });
           if (token) {
             setFcmToken(token);
             localStorage.setItem('wants_notifications', 'true');
