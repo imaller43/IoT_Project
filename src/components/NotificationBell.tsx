@@ -24,11 +24,7 @@ export const NotificationBell: React.FC = () => {
           if (messaging) {
             const wantsNotifications = localStorage.getItem('wants_notifications') !== 'false';
             if (wantsNotifications) {
-              const registration = await navigator.serviceWorker.ready;
-              const token = await getToken(messaging, { 
-                vapidKey: VAPID_KEY,
-                serviceWorkerRegistration: registration
-              });
+              const token = await getToken(messaging, { vapidKey: VAPID_KEY });
               if (token) setFcmToken(token);
             }
           }
@@ -88,11 +84,7 @@ export const NotificationBell: React.FC = () => {
         setPermission(permissionResult);
         
         if (permissionResult === 'granted') {
-          const registration = await navigator.serviceWorker.ready;
-          const token = await getToken(messaging, { 
-            vapidKey: VAPID_KEY,
-            serviceWorkerRegistration: registration
-          });
+          const token = await getToken(messaging, { vapidKey: VAPID_KEY });
           if (token) {
             setFcmToken(token);
             localStorage.setItem('wants_notifications', 'true');
