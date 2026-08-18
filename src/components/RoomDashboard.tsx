@@ -139,6 +139,8 @@ const RoomDashboard: React.FC<RoomDashboardProps> = ({
           rightTitle="TEMPERATURE"
           data={combinedTempHumData}
           xAxisKey="time"
+          leftDomain={[0, 'auto']}
+          rightDomain={[10, 40]}
           series={[
             { dataKey: 'humidity', name: 'Humidity (%)', color: '#3b82f6', yAxisId: 'left' },
             { dataKey: 'temperature', name: 'Temperature (°C)', color: '#10b981', yAxisId: 'right' }

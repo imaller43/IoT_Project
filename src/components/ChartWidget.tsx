@@ -1,13 +1,13 @@
 import React from 'react';
-import { 
-  AreaChart, 
-  Area, 
-  XAxis, 
-  YAxis, 
-  CartesianGrid, 
-  Tooltip, 
-  Legend, 
-  ResponsiveContainer 
+import {
+  AreaChart,
+  Area,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer
 } from 'recharts';
 
 export interface ChartSeries {
@@ -23,15 +23,17 @@ interface ChartWidgetProps {
   data: any[];
   series: ChartSeries[];
   xAxisKey: string;
+  leftDomain?: [number | 'auto', number | 'auto'];
+  rightDomain?: [number | 'auto', number | 'auto'];
 }
 
-const ChartWidget: React.FC<ChartWidgetProps> = ({ title, rightTitle, data, series, xAxisKey }) => {
+const ChartWidget: React.FC<ChartWidgetProps> = ({ title, rightTitle, data, series, xAxisKey, leftDomain, rightDomain }) => {
   const safeData = Array.isArray(data) ? data : [];
   const hasRightAxis = series.some(s => s.yAxisId === 'right');
 
   return (
     <div className="panel" style={{ height: '350px' }}>
-      <div className="panel-header" style={rightTitle ? { display: 'flex', justifyContent: 'space-between', paddingLeft: '30px', paddingRight: '30px' } : undefined}>
+      <div className="panel-header" style={rightTitle ? { display: 'flex', justifyContent: 'space-between', paddingLeft: '20px', paddingRight: '5px' } : undefined}>
         <span>{title}</span>
         {rightTitle && <span>{rightTitle}</span>}
       </div>
@@ -41,16 +43,16 @@ const ChartWidget: React.FC<ChartWidgetProps> = ({ title, rightTitle, data, seri
             <defs>
               {series.map((s) => (
                 <linearGradient key={`color-${s.dataKey}`} id={`color-${s.dataKey}`} x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor={s.color} stopOpacity={0.3}/>
-                  <stop offset="95%" stopColor={s.color} stopOpacity={0}/>
+                  <stop offset="5%" stopColor={s.color} stopOpacity={0.3} />
+                  <stop offset="95%" stopColor={s.color} stopOpacity={0} />
                 </linearGradient>
               ))}
             </defs>
             <CartesianGrid strokeDasharray="3 3" stroke="var(--chart-grid)" vertical={false} />
-            <XAxis 
-              dataKey={xAxisKey} 
-              stroke="var(--text-secondary)" 
-              fontSize={11} 
+            <XAxis
+              dataKey={xAxisKey}
+              stroke="var(--text-secondary)"
+              fontSize={11}
               tickMargin={10}
               tickFormatter={(val) => {
                 // Shorten time string for display if needed
@@ -65,7 +67,7 @@ const ChartWidget: React.FC<ChartWidgetProps> = ({ title, rightTitle, data, seri
               stroke="var(--text-secondary)" 
               fontSize={11} 
               tickMargin={10} 
-              domain={['auto', 'auto']} 
+              domain={leftDomain || [0, 'auto']} 
             />
             {hasRightAxis && (
               <YAxis 
@@ -74,23 +76,23 @@ const ChartWidget: React.FC<ChartWidgetProps> = ({ title, rightTitle, data, seri
                 stroke="var(--text-secondary)" 
                 fontSize={11} 
                 tickMargin={10} 
-                domain={['auto', 'auto']} 
+                domain={rightDomain || [0, 'auto']} 
               />
             )}
-            <Tooltip 
+            <Tooltip
               contentStyle={{ backgroundColor: 'var(--chart-tooltip-bg)', borderColor: 'var(--panel-border)', borderRadius: '8px' }}
               itemStyle={{ fontSize: '0.875rem' }}
               labelStyle={{ color: 'var(--text-secondary)', marginBottom: '0.5rem', fontSize: '0.75rem' }}
             />
             <Legend wrapperStyle={{ fontSize: '12px' }} />
             {series.map((s) => (
-              <Area 
+              <Area
                 key={s.dataKey}
                 yAxisId={s.yAxisId || 'left'}
-                type="monotone" 
-                dataKey={s.dataKey} 
-                name={s.name} 
-                stroke={s.color} 
+                type="monotone"
+                dataKey={s.dataKey}
+                name={s.name}
+                stroke={s.color}
                 fill={`url(#color-${s.dataKey})`}
                 strokeWidth={2}
                 dot={false}
