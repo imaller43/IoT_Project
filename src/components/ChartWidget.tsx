@@ -37,7 +37,7 @@ const ChartWidget: React.FC<ChartWidgetProps> = ({ title, rightTitle, data, seri
       </div>
       <div style={{ flex: 1, width: '100%', minHeight: 0 }}>
         <ResponsiveContainer width="100%" height="100%">
-          <AreaChart data={safeData} margin={{ top: 5, right: 30, left: 10, bottom: 5 }}>
+          <AreaChart data={safeData} margin={{ top: 5, right: 0, left: 0, bottom: 5 }}>
             <defs>
               {series.map((s) => (
                 <linearGradient key={`color-${s.dataKey}`} id={`color-${s.dataKey}`} x1="0" y1="0" x2="0" y2="1">
