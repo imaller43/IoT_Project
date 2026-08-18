@@ -55,7 +55,16 @@ const RoomDashboard: React.FC<RoomDashboardProps> = ({
     };
 
     getHistorical();
-    rawInterval = setInterval(getHistorical, 60000);
+    
+    // Dynamic polling: query less frequently for large time ranges to save Raspberry Pi CPU
+    let pollInterval = 60000; // default 1 min
+    if (timeRange === '-3d' || timeRange === '-7d') {
+      pollInterval = 5 * 60000; // 5 mins
+    } else if (timeRange === '-12h' || timeRange === '-24h') {
+      pollInterval = 2 * 60000; // 2 mins
+    }
+
+    rawInterval = setInterval(getHistorical, pollInterval);
 
     return () => {
       clearInterval(rawInterval);
