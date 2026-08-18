@@ -155,10 +155,10 @@ export const NotificationBell: React.FC = () => {
               </div>
             </div>
             <h3 style={{ marginTop: 0, marginBottom: '0.5rem', color: 'var(--text-primary)', fontSize: '1.25rem' }}>
-              Notifikasi Telefon Pintar 📱
+              Mobile Notifications 📱
             </h3>
             <p style={{ color: 'var(--text-secondary)', marginBottom: '1.5rem', lineHeight: '1.5' }}>
-              Untuk telefon pintar, kami menggunakan <strong>Telegram Bot</strong> bagi memastikan notifikasi suhu tinggi dihantar dengan lebih pantas dan stabil berbanding Web Push biasa.
+              For mobile devices, we use a <strong>Telegram Bot</strong> to ensure high-temperature alerts are delivered faster and more reliably than standard Web Push notifications.
             </p>
             <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center' }}>
               <button 
@@ -173,10 +173,10 @@ export const NotificationBell: React.FC = () => {
                   fontWeight: 500
                 }}
               >
-                Tutup
+                Close
               </button>
               <a 
-                href="https://t.me/GANTIKAN_DENGAN_USERNAME_BOT_AWAK" 
+                href="https://t.me/dashboardIoT_bot" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 style={{
@@ -191,7 +191,7 @@ export const NotificationBell: React.FC = () => {
                   cursor: 'pointer'
                 }}
               >
-                Buka Telegram
+                Open Telegram
               </a>
             </div>
           </div>
