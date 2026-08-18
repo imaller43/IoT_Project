@@ -41,7 +41,6 @@ const RoomDashboard: React.FC<RoomDashboardProps> = ({
 
   useEffect(() => {
     let rawInterval: NodeJS.Timeout;
-    let meanInterval: NodeJS.Timeout;
 
     const getHistorical = async () => {
       try {
@@ -55,26 +54,33 @@ const RoomDashboard: React.FC<RoomDashboardProps> = ({
       }
     };
 
-    const getMean = async () => {
-      try {
-        const data = await fetchMeanHourlyData(timeRange, measurement);
-        setMeanData(data);
-      } catch (e) {
-        setIsDbConnected(false);
-      }
-    };
-
     getHistorical();
-    getMean();
-
     rawInterval = setInterval(getHistorical, 60000);
-    meanInterval = setInterval(getMean, 5 * 60000);
 
     return () => {
       clearInterval(rawInterval);
-      clearInterval(meanInterval);
     };
   }, [timeRange, measurement]);
+
+  useEffect(() => {
+    let meanInterval: NodeJS.Timeout;
+
+    const getMean = async () => {
+      try {
+        const data = await fetchMeanHourlyData('7d', measurement);
+        setMeanData(data);
+      } catch (e) {
+        console.error("Failed to fetch mean data", e);
+      }
+    };
+
+    getMean();
+    meanInterval = setInterval(getMean, 5 * 60000);
+
+    return () => {
+      clearInterval(meanInterval);
+    };
+  }, [measurement]);
 
   // Combine temperature and humidity for the chart
   const combinedTempHumData = useMemo(() => {
