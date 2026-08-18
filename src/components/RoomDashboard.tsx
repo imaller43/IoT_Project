@@ -67,7 +67,7 @@ const RoomDashboard: React.FC<RoomDashboardProps> = ({
 
     const getMean = async () => {
       try {
-        const data = await fetchMeanHourlyData('7d', measurement);
+        const data = await fetchMeanHourlyData('-7d', measurement);
         setMeanData(data);
       } catch (e) {
         console.error("Failed to fetch mean data", e);
