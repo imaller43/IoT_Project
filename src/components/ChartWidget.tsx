@@ -20,20 +20,18 @@ export interface ChartSeries {
 interface ChartWidgetProps {
   title: string;
   rightTitle?: string;
-  leftAxisLabel?: string;
-  rightAxisLabel?: string;
   data: any[];
   series: ChartSeries[];
   xAxisKey: string;
 }
 
-const ChartWidget: React.FC<ChartWidgetProps> = ({ title, rightTitle, leftAxisLabel, rightAxisLabel, data, series, xAxisKey }) => {
+const ChartWidget: React.FC<ChartWidgetProps> = ({ title, rightTitle, data, series, xAxisKey }) => {
   const safeData = Array.isArray(data) ? data : [];
   const hasRightAxis = series.some(s => s.yAxisId === 'right');
 
   return (
     <div className="panel" style={{ height: '350px' }}>
-      <div className="panel-header" style={{ display: 'flex', justifyContent: 'space-between' }}>
+      <div className="panel-header" style={rightTitle ? { display: 'flex', justifyContent: 'space-between', paddingLeft: '30px', paddingRight: '30px' } : undefined}>
         <span>{title}</span>
         {rightTitle && <span>{rightTitle}</span>}
       </div>
@@ -68,7 +66,6 @@ const ChartWidget: React.FC<ChartWidgetProps> = ({ title, rightTitle, leftAxisLa
               fontSize={11} 
               tickMargin={10} 
               domain={['auto', 'auto']} 
-              label={leftAxisLabel ? { value: leftAxisLabel, angle: -90, position: 'insideLeft', offset: -5, style: { fill: 'var(--text-secondary)', fontSize: 12, fontWeight: 'bold' } } : undefined}
             />
             {hasRightAxis && (
               <YAxis 
@@ -78,7 +75,6 @@ const ChartWidget: React.FC<ChartWidgetProps> = ({ title, rightTitle, leftAxisLa
                 fontSize={11} 
                 tickMargin={10} 
                 domain={['auto', 'auto']} 
-                label={rightAxisLabel ? { value: rightAxisLabel, angle: 90, position: 'insideRight', offset: -5, style: { fill: 'var(--text-secondary)', fontSize: 12, fontWeight: 'bold' } } : undefined}
               />
             )}
             <Tooltip 
