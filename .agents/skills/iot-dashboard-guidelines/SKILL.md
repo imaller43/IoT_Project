@@ -12,22 +12,24 @@ Kemahiran (*skill*) ini adalah buku peraturan khusus untuk projek ini. Sila patu
 - **Pangkalan Data (Backend)**: InfluxDB (Data Historik & Analisis Time-Series) & MQTT Broker (Data Masa Nyata).
 - **Perkakasan & Middleware**: Projek ini menggunakan **Raspberry Pi 4 Model B** yang bertindak bersama **Node-RED** sebagai middleware untuk mengawal dan memantau status GPIO (*switch state*).
 - **Pengesahan (Authentication)**: Clerk (Autentikasi selamat tanpa *backend server* peribadi).
+- **Sokongan Berbilang Bilik (Multi-Room)**: Dashboard ini menyokong pemantauan bagi pelbagai bilik (contohnya Bilik 1, Bilik 2, Bilik 3) menggunakan komponen tab navigasi.
 
 ## 2. Tema & Warna (UI/UX)
-- Projek ini menggunakan sistem **Dark Mode** (lalai) dan **Soft Light Mode**.
+- Projek ini menggunakan sistem **Dark Mode** (lalai) dan **Soft Light Mode**. Butang penukar tema diletakkan di dalam halaman Log Masuk dan Papan Pemuka utama.
 - **JANGAN** menggunakan warna statik/tegar (seperti `#000000`, `#ffffff` atau `rgba(...)`) di dalam fail `.tsx` (*inline styles*) melainkan terpaksa.
 - **WAJIB** menggunakan pembolehubah CSS yang telah didaftarkan dalam `index.css` (contoh: `var(--bg-color)`, `var(--panel-bg)`, `var(--text-primary)`).
 - Gaya antara muka perlulah kelihatan premium, minimalis, dan menggunakan efek kaca (*glassmorphism*).
 - Ikon wajib didapatkan daripada pustaka `lucide-react`.
 
-## 2. Penghalaan (Routing) & Autentikasi
+## 3. Penghalaan (Routing), Autentikasi & Sesi
 - Pengurusan laluan (*Routing*) diuruskan di dalam `main.tsx` menggunakan `react-router-dom`.
 - Pengesahan pengguna (*Authentication*) diuruskan secara eksklusif oleh `@clerk/clerk-react`.
+- **Log Keluar Automatik (Auto-Logout)**: Terdapat ciri keselamatan yang akan log keluar pengguna secara automatik jika aplikasi dibiarkan tidak aktif (idle) selama 1 jam (melalui `useIdleTimeout`).
 - Kotak log masuk (*Clerk Sign-In Box*) di halaman `/login` **wajib** menggunakan logik tema keterbalikan (*inverse*): Jika tema aplikasi *Light*, kotak mesti *Dark*. Jika aplikasi *Dark*, kotak mesti *Light* (Lalai).
 - Kotak log masuk juga **wajib** diletakkan bayang-bayang di belakangnya (*box-shadow*) melalui panggil CSS variable `var(--login-box-shadow)` dalam tetapan `appearance`.
 - **Wajib** meletakkan efek *radial-gradient* bercahaya (aura) di belakang kotak log masuk melalui pembolehubah `var(--login-aura)` supaya antaramuka nampak lebih premium dan tidak tenggelam.
 
-## 3. Prestasi Data (Data Performance) & Downsampling
+## 4. Prestasi Data (Data Performance) & Downsampling
 - Pangkalan data InfluxDB boleh memulangkan puluhan ribu baris data jika julat masa terlalu panjang, yang akan menyebabkan pelayar (browser) *hang*.
 - **Wajib menggunakan `aggregateWindow`** dalam pertanyaan Flux untuk graf sejarah (`fetchHistoricalData`) berdasarkan julat masa:
   - `-30m` & `-1h` = `1m`
@@ -39,14 +41,15 @@ Kemahiran (*skill*) ini adalah buku peraturan khusus untuk projek ini. Sila patu
   - `-7d` = `2h`
 - Peraturan ini bertujuan memastikan data graf sentiasa berada di bawah 200 titik (data points) pada satu-satu masa.
 
-## 4. Pembangunan Komponen & Widget
+## 5. Pembangunan Komponen & Widget
 - Pembangunan widget carta dan jadual perlu responsif secara automatik kepada perubahan tema (Light/Dark).
+- Status Sambungan: Sentiasa paparkan status MQTT (Connected/Disconnected) dan status DB (Connected/Error) kepada pengguna.
 - **Responsif Mobile**: Wajib memastikan susun atur grid (`top-grid`, `middle-grid`, `bottom-grid`, `switch-grid`) responsif terhadap saiz skrin. Jangan *hardcode* `grid-template-columns: repeat(3, 1fr)` tanpa `media queries` kerana ia akan memecahkan susun atur pada peranti mudah alih (walaupun dalam mod desktop/tablet). 
 - Gunakan `@media (max-width: 1024px)` untuk menukar grid kepada `1fr` supaya ia tersusun menegak (stacked) untuk paparan kecil.
 - Pastikan elemen `header` atau bekas utama (`container`) sentiasa menggunakan `width: 100%` supaya ia tidak mengecut ke sebelah kiri skrin ketika skrol mendatar (*horizontal overflow*).
 - Kekalkan reka bentuk komponen agar sentiasa boleh diguna semula (*reusable*).
 
-## 5. MQTT & Logik Suis Pintar (Hardware Override)
+## 6. MQTT & Logik Suis Pintar (Hardware Override)
 - **Topik Pengasingan (Decoupled Topics)**: Untuk mengelakkan gelung suap balik (*feedback loop*) dan menyokong pengesahan perkakasan, kawalan suis dan maklum balas status diasingkan.
   - Dashboard *publish* (menghantar) ke: `sapura/bilik1/switch/interrupt`
   - Node-RED / Suis Fizikal *publish* status ke: `sapura/bilik1/switch/interrupt1`
@@ -59,11 +62,11 @@ Kemahiran (*skill*) ini adalah buku peraturan khusus untuk projek ini. Sila patu
   - Selagi mana-mana override aktif, aplikasi web tidak dapat mengawal lampu tersebut.
   - Apabila override dilepaskan (OFF / Suhu kembali normal), UI akan menetapkan semula (*reset*) kedudukan suis perisian kepada OFF secara automatik, dan menyegerakkan kembali status tersebut ke Node-RED.
 
-## 6. Pantang Larang Projek ⚠️
+## 7. Pantang Larang Projek ⚠️
 - **DILARANG SAMA SEKALI** meletakkan (*hardcode*) sebarang Kunci API (API Key), Kata Laluan, Token, atau Kredensial di dalam fail kod (.ts/.js/.tsx) yang ditolak (push) ke GitHub. **WAJIB** menggunakan fail `.env` (contoh: `import.meta.env.VITE_API_KEY`).
 - **Dilarang** membuang atau mendedahkan konfigurasi di dalam `VITE_CLERK_PUBLISHABLE_KEY`.
 - Sentiasa asingkan tetapan kepada `.env.development` (untuk kunci ujian/test) dan `.env.production` (untuk kunci sebenar/live). Fail `.env` mesti disenaraikan dalam `.gitignore`.
-- **Notifikasi Amaran**: Projek ini secara rasminya HANYA menggunakan Telegram Bot (`node-red-contrib-telegrambot` di Node-RED) untuk sebarang amaran. DILARANG memperkenalkan semula Firebase Web Push kerana ia menimbulkan masalah pada iOS/Apple.
+- **Notifikasi Amaran (Hybrid Desktop-Mobile)**: Projek ini menggunakan Firebase Web Push untuk pelayar Komputer (Desktop), tetapi secara rasminya menggunakan Telegram Bot untuk pengguna Telefon Pintar (Mobile). JANGAN buang sistem semakan `isMobile` dalam `NotificationBell.tsx` kerana Web Push terbukti menimbulkan pelbagai masalah sokongan pada iOS/Apple.
 - **Hanya ubah suai fail yang diminta**. Jangan sentuh logik pangkalan data, MQTT, atau komponen lain sekiranya pengguna hanya meminta suntingan antara muka (UI).
 - **Pengurusan Fail Service Worker**: Fail `firebase-messaging-sw.js` **WAJIB** kekal berada di dalam direktori `src/` (bukan `public/`). Projek ini menggunakan `vite-plugin-pwa` dengan strategi `injectManifest`, yang secara automatik akan memproses fail tersebut dari folder `src/`. Memindahkannya ke folder `public/` akan merosakkan sistem notifikasi Web Push.
 - **Peraturan Pengekodan (Git):** Selepas setiap perubahan selesai, AI **wajib** menolak (commit & push) kod ke GitHub menggunakan: `git add . ; git commit -m "..." ; git push`.
