@@ -135,12 +135,15 @@ const RoomDashboard: React.FC<RoomDashboardProps> = ({
       {/* Bottom Grid: Charts */}
       <div className="bottom-grid">
         <ChartWidget
-          title="Humidity & Temperature"
+          title="HUMIDITY"
+          rightTitle="TEMPERATURE"
+          leftAxisLabel="(%)"
+          rightAxisLabel="(°C)"
           data={combinedTempHumData}
           xAxisKey="time"
           series={[
-            { dataKey: 'humidity', name: 'Humidity (%)', color: '#3b82f6' },
-            { dataKey: 'temperature', name: 'Temperature (°C)', color: '#10b981' }
+            { dataKey: 'humidity', name: 'Humidity (%)', color: '#3b82f6', yAxisId: 'left' },
+            { dataKey: 'temperature', name: 'Temperature (°C)', color: '#10b981', yAxisId: 'right' }
           ]}
         />
         <ChartWidget
@@ -153,13 +156,16 @@ const RoomDashboard: React.FC<RoomDashboardProps> = ({
         />
         <div style={{ gridColumn: '1 / -1' }}>
           <ChartWidget
-            title="Mean Hourly Data"
+            title="MEAN HUMIDITY & LIGHT"
+            rightTitle="MEAN TEMPERATURE"
+            leftAxisLabel="(%) / (LPD)"
+            rightAxisLabel="(°C)"
             data={meanData}
             xAxisKey="time"
             series={[
-              { dataKey: 'mean_humidity', name: 'Mean Humidity (%)', color: '#3b82f6' },
-              { dataKey: 'mean_temperature', name: 'Mean Temp (°C)', color: '#10b981' },
-              { dataKey: 'mean_ldr', name: 'Mean Light (LPD)', color: '#f59e0b' }
+              { dataKey: 'mean_humidity', name: 'Mean Humidity (%)', color: '#3b82f6', yAxisId: 'left' },
+              { dataKey: 'mean_temperature', name: 'Mean Temp (°C)', color: '#10b981', yAxisId: 'right' },
+              { dataKey: 'mean_ldr', name: 'Mean Light (LPD)', color: '#f59e0b', yAxisId: 'left' }
             ]}
           />
         </div>
