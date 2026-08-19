@@ -49,12 +49,7 @@ export default defineConfig({
     cors: true,
     allowedHosts: true, // Allow all host headers (needed for Cloudflare Tunnel)
     proxy: {
-      '/api': {
-        target: 'http://10.12.27.21:8086',
-        changeOrigin: true,
-        secure: false,
-      },
-      '/mqtt': {
+      '/api/mqtt': {
         target: 'ws://10.12.27.21:8083',
         ws: true,
         changeOrigin: true,

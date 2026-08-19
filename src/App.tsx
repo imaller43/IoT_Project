@@ -152,7 +152,7 @@ function App({ theme, setTheme }: AppProps) {
             className={`browser-tab ${activeTab === 'room1' ? 'active' : ''}`}
             onClick={() => setActiveTab('room1')}
           >
-            ROOM 1
+            DESIGN ROOM
           </button>
           <button
             className={`browser-tab ${activeTab === 'room2' ? 'active' : ''}`}
