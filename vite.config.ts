@@ -50,10 +50,14 @@ export default defineConfig({
     allowedHosts: true, // Allow all host headers (needed for Cloudflare Tunnel)
     proxy: {
       '/api/mqtt': {
-        target: 'ws://10.12.27.21:8083',
+        target: 'wss://emqxbroker.ikmaliman.my',
         ws: true,
         changeOrigin: true,
-        secure: false,
+        secure: true,
+        // Added headers to properly handle secure WebSocket connection
+        headers: {
+          'Sec-WebSocket-Extensions': 'permessage-deflate; client_max_window_bits'
+        }
       }
     }
   }
